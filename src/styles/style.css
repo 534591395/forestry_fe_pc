@@ -1,0 +1,32 @@
+.flex-space-between {
+  display: flex;
+  justify-content: space-between;
+}
+.flex-center-x {
+  display: flex;
+  justify-content: center;
+}
+.flex-center-xy {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.ant-carousel .slick-slide {
+  text-align: center;
+  height: 160px;
+  line-height: 160px;
+  overflow: hidden;
+}
+
+.ant-carousel .slick-dots li {
+  background: #000;
+  height: 10px;
+}
+.ant-carousel .slick-dots li button {
+  height: 10px;
+}
+
+.ant-carousel {
+  margin: 15px 0;
+}
