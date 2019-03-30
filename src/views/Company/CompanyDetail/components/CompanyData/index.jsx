@@ -124,7 +124,7 @@ class CompanyData extends Component {
                 <Col span={ 12 }>
                   <Form.Item label="法人身份证">
                     <img src={ this.props.company.cardFrontPic } alt="" className="img" onClick={ () => { this.setImageModalData(this.props.company.licencePic) } } />
-                    <img src={ this.props.company.cardOppositePic } alt="" className="img" onClick={ () => { this.setImageModalData(this.props.company.licencePic) } } />
+                    <img src={ this.props.company.cardOppositePic } alt="" className="img" onClick={ () => { this.setImageModalData(this.props.company.cardOppositePic) } } />
                   </Form.Item>
                 </Col>
               </Row>
@@ -132,13 +132,13 @@ class CompanyData extends Component {
               <Row style={{ marginTop: 30 }}>
                 <Col span={ 12 }>
                   <Form.Item label="告知书">
-                    <img src={ this.props.company.notificationPic } alt="" className="img" onClick={ () => { this.setImageModalData(this.props.company.licencePic) } } />
+                    <img src={ this.props.company.notificationPic } alt="" className="img" onClick={ () => { this.setImageModalData(this.props.company.notificationPic) } } />
                   </Form.Item>
                 </Col>
 
                 <Col span={ 12 }>
                   <Form.Item label="承诺书">
-                    <img src={ this.props.company.commitPic } alt="" className="img" onClick={ () => { this.setImageModalData(this.props.company.licencePic) } } />
+                    <img src={ this.props.company.commitPic } alt="" className="img" onClick={ () => { this.setImageModalData(this.props.company.commitPic) } } />
                   </Form.Item>
                 </Col>
               </Row>

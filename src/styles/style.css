@@ -30,3 +30,7 @@
 .ant-carousel {
   margin: 15px 0;
 }
+
+.company-data img{
+  cursor: pointer;
+}
