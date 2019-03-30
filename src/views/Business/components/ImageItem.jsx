@@ -70,10 +70,6 @@ class ImageItem extends Component {
                 })
               }
             </Carousel>
-            <div>
-              <p>{ this.props.timeList && this.props.timeList[index] }</p>
-              <p>{ this.props.timeList && this.props.locationList[index] }</p>
-            </div>
             {this.props.images.length> 1 ? 
               <div>
                   <div className="carousel-left"><Icon type="arrow-left" onClick={e => this.prev()}/></div>
@@ -82,7 +78,10 @@ class ImageItem extends Component {
               </div> : ""
             }
         </div> 
-
+        <div>
+          <p>{ this.props.timeList && this.props.timeList[index] }</p>
+          <p>{ this.props.timeList && this.props.locationList[index] }</p>
+        </div>
         {/* </div> */}
 
         <Modal 
