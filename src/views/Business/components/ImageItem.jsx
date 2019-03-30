@@ -49,33 +49,40 @@ class ImageItem extends Component {
         <span>{ this.props.title }</span>
 
         {/* <div style={{ marginTop: 15, marginBottom: 15, display: 'flex', flexWrap: 'wrap' }}> */}
+        <div className="carousel-box">
           <Carousel afterChange={e => this.onChange(e)} ref="Carousel" dots={false}>
-            {
-              this.props.images.map((item, index) => {
-                return (
-                    <div key={ index }>
-                      <img 
-                        src={ item } 
-                        alt="" 
-                        style={{ height: 160, width: '100%', cursor: 'pointer'}}
-                        onClick={ () => { this.setImageModalData(item) } } 
-                      />
-                      {/* <div>
-                        <p>{ this.props.timeList && this.props.timeList[index] }</p>
-                        <p>{ this.props.timeList && this.props.locationList[index] }</p>
-                      </div> */}
-                    </div>
-                )
-              })
+              {
+                this.props.images.map((item, index) => {
+                  return (
+                      <div key={ index }>
+                        <img 
+                          src={ item } 
+                          alt="" 
+                          style={{ height: 160, width: '100%', cursor: 'pointer'}}
+                          onClick={ () => { this.setImageModalData(item) } } 
+                        />
+                        {/* <div>
+                          <p>{ this.props.timeList && this.props.timeList[index] }</p>
+                          <p>{ this.props.timeList && this.props.locationList[index] }</p>
+                        </div> */}
+                      </div>
+                  )
+                })
+              }
+            </Carousel>
+            <div>
+              <p>{ this.props.timeList && this.props.timeList[index] }</p>
+              <p>{ this.props.timeList && this.props.locationList[index] }</p>
+            </div>
+            {this.props.images.length> 1 ? 
+              <div>
+                  <div className="carousel-left"><Icon type="arrow-left" onClick={e => this.prev()}/></div>
+                  <div className="carousel-right"><Icon type="arrow-right" onClick={e=> this.next()}/></div>
+                  <div className="carousel-num">{index+1}/{this.props.images.length}</div>
+              </div> : ""
             }
-          </Carousel>
-          <div>
-            <p>{ this.props.timeList && this.props.timeList[index] }</p>
-            <p>{ this.props.timeList && this.props.locationList[index] }</p>
-          </div>
-          <div className="carousel-left"><Icon type="arrow-left" onClick={e => this.prev()}/></div>
-          <div className="carousel-right"><Icon type="arrow-right" onClick={e=> this.next()}/></div>
-          <div className="carousel-num">{index+1}/{this.props.images.length}</div>
+        </div> 
+
         {/* </div> */}
 
         <Modal 
