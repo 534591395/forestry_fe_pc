@@ -123,7 +123,7 @@ class CompanyData extends Component {
 
                 <Col span={ 12 }>
                   <Form.Item label="法人身份证">
-                    <img src={ this.props.company.cardFrontPic } alt="" className="img" onClick={ () => { this.setImageModalData(this.props.company.licencePic) } } />
+                    <img src={ this.props.company.cardFrontPic } alt="" className="img" onClick={ () => { this.setImageModalData(this.props.company.cardFrontPic) } } />
                     <img src={ this.props.company.cardOppositePic } alt="" className="img" onClick={ () => { this.setImageModalData(this.props.company.cardOppositePic) } } />
                   </Form.Item>
                 </Col>
