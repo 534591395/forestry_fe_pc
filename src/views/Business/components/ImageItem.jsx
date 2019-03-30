@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { Modal, Carousel } from 'antd';
+import { Modal, Carousel, Icon } from 'antd';
 
 
 class ImageItem extends Component {
@@ -30,6 +30,18 @@ class ImageItem extends Component {
     });
   }
 
+  prev() {
+    if (this.refs.Carousel) {
+      this.refs.Carousel.prev();
+    }
+  }
+
+  next() {
+    if (this.refs.Carousel) {
+      this.refs.Carousel.next();
+    }
+  }
+
   render() {
     const { index } = this.state;
     return (
@@ -37,7 +49,7 @@ class ImageItem extends Component {
         <span>{ this.props.title }</span>
 
         {/* <div style={{ marginTop: 15, marginBottom: 15, display: 'flex', flexWrap: 'wrap' }}> */}
-          <Carousel afterChange={e => this.onChange(e)}>
+          <Carousel afterChange={e => this.onChange(e)} ref="Carousel" dots={false}>
             {
               this.props.images.map((item, index) => {
                 return (
@@ -45,7 +57,7 @@ class ImageItem extends Component {
                       <img 
                         src={ item } 
                         alt="" 
-                        style={{ height: '100%', width: '100%', cursor: 'pointer'}}
+                        style={{ height: 160, width: '100%', cursor: 'pointer'}}
                         onClick={ () => { this.setImageModalData(item) } } 
                       />
                       {/* <div>
@@ -61,6 +73,9 @@ class ImageItem extends Component {
             <p>{ this.props.timeList && this.props.timeList[index] }</p>
             <p>{ this.props.timeList && this.props.locationList[index] }</p>
           </div>
+          <div className="carousel-left"><Icon type="arrow-left" onClick={e => this.prev()}/></div>
+          <div className="carousel-right"><Icon type="arrow-right" onClick={e=> this.next()}/></div>
+          <div className="carousel-num">{index+1}/{this.props.images.length}</div>
         {/* </div> */}
 
         <Modal 
