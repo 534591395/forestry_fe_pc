@@ -37,12 +37,12 @@ class Cert extends Component {
   operateRecord = (item, type, record) => {
     switch (item + type) {
       case '通过原木类开证': {
-        this.invokeCert(record.id, 'wood_cert', 2);
+        this.invokeCert(record.id, 'wood_cert', 2, 1, record.amount, record.cid);
 
         break;
       }
       case '通过板材类开证': {
-        this.invokeCert(record.id, 'board_cert', 2);
+        this.invokeCert(record.id, 'board_cert', 2, 2, record.amount, record.cid);
 
         break;
       }
@@ -104,12 +104,12 @@ class Cert extends Component {
     }
   }
 
-  invokeCert = (id, table, status) => {
+  invokeCert = (id, table, status, wood_type, amount, cid) => {
     window.$http({
       url: `/admin/business/invokeCert`,
       method: 'PUT',
       data: {
-        id, table, status
+        id, table, status, wood_type, amount, cid
       }
     }).then((res) => {
       if(res && res.data.code == 0) {
