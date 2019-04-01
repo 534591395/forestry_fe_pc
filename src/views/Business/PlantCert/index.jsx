@@ -171,6 +171,10 @@ class PlantCert extends Component {
         )
       },
       {
+        title: '提单量',
+        dataIndex: 'amount'
+      },
+      {
         title: '操作',
         fixed: 'right',
         width: 150,
