@@ -258,15 +258,16 @@ class CompanyData extends Component {
                       { getFieldDecorator('refuse_reason', {
                         rules: [{ required: true, message: '请输入审核不通过原因' }]
                       })(
-                        <Select mode="multiple" style={{ width: 300 }}>
-                          {
-                            this.props.refuseReason.map((item, index) => (
-                              <Select.Option key={ `${index + 1}、${item}` }>
-                                { item }
-                              </Select.Option>
-                            ))
-                          }
-                        </Select>
+                        // <Select mode="multiple" style={{ width: 300 }}>
+                        //   {
+                        //     this.props.refuseReason.map((item, index) => (
+                        //       <Select.Option key={ `${index + 1}、${item}` }>
+                        //         { item }
+                        //       </Select.Option>
+                        //     ))
+                        //   }
+                        // </Select>
+                        <Input style={{ width: 300 }} />
                       ) }
                     </Form.Item>
                   </Row>
@@ -293,6 +294,7 @@ class CompanyData extends Component {
         </Form>
 
         <Modal 
+          width={1000} 
           title="查看图片" 
           visible={ this.state.imageModal } 
           footer={ null }

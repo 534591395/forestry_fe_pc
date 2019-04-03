@@ -85,6 +85,7 @@ class ImageItem extends Component {
         {/* </div> */}
 
         <Modal 
+          width={1000} 
           title="查看图片" 
           visible={ this.state.imageDetailModal } 
           footer={ null }
