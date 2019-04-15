@@ -29,6 +29,14 @@ class Cert extends Component {
       }
     }).then((res) => {
       if(res && res.data.code == 0) {
+        res.data.data.map(item => {
+          if (item.first_variety === 'first_variety_01') {
+            item.cert_type = '原木类开证';
+          } else
+          if (item.first_variety === 'first_variety_02') {
+            item.cert_type = '板材类开证';
+          }
+        });
         this.setState({tableData: res.data.data});
       }
     });
@@ -37,12 +45,12 @@ class Cert extends Component {
   operateRecord = (item, type, record) => {
     switch (item + type) {
       case '通过原木类开证': {
-        this.invokeCert(record.id, 'wood_cert', 2, 1, record.amount, record.cid);
+        this.invokeCert(record.id, 'wood_cert', 2, 1, record.first_variety, record.wood_json, record.cid);
 
         break;
       }
       case '通过板材类开证': {
-        this.invokeCert(record.id, 'board_cert', 2, 2, record.amount, record.cid);
+        this.invokeCert(record.id, 'board_cert', 2, 2, record.first_variety, record.wood_json, record.cid);
 
         break;
       }
@@ -104,12 +112,12 @@ class Cert extends Component {
     }
   }
 
-  invokeCert = (id, table, status, wood_type, amount, cid) => {
+  invokeCert = (id, table, status, wood_type, first_variety, wood_json, cid) => {
     window.$http({
       url: `/admin/business/invokeCert`,
       method: 'PUT',
       data: {
-        id, table, status, wood_type, amount, cid
+        id, table, status, wood_type, first_variety, wood_json, cid
       }
     }).then((res) => {
       if(res && res.data.code == 0) {
