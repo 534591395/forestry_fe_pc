@@ -50,7 +50,7 @@ class Cert extends Component {
         break;
       }
       case '通过板材类开证': {
-        this.invokeCert(record.id, 'board_cert', 2, 2, record.first_variety, record.wood_json, record.cid);
+        this.invokeCert(record.id, 'wood_cert', 2, 2, record.first_variety, record.wood_json, record.cid);
 
         break;
       }
@@ -60,7 +60,7 @@ class Cert extends Component {
         break;
       }
       case '驳回板材类开证': {
-        this.invokeCert(record.id, 'board_cert', 3);
+        this.invokeCert(record.id, 'wood_cert', 3);
 
         break;
       }
