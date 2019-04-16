@@ -34,7 +34,7 @@ class PlantCert extends Component {
     switch (item) {
       case '通过': {
         if (record.picture_url) {
-          this.invokePlantCert(record.id, 2);
+          this.invokePlantCert(record.id, 2, record.first_variety, record.wood_json, record.cid);
         }
         else {
           this.invokePlantCert(record.id, 4);
@@ -62,12 +62,12 @@ class PlantCert extends Component {
     }
   }
 
-  invokePlantCert = (id, status) => {
+  invokePlantCert = (id, status, first_variety, wood_json, cid) => {
     window.$http({
       url: `/admin/business/invokePlantCert`,
       method: 'PUT',
       data: {
-        id, status
+        id, status, first_variety, wood_json, cid
       }
     }).then((res) => {
       if(res && res.data.code == 0) {
