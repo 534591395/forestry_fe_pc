@@ -37,7 +37,7 @@ class PlantCert extends Component {
           this.invokePlantCert(record.id, 2, record.first_variety, record.wood_json, record.cid);
         }
         else {
-          this.invokePlantCert(record.id, 4);
+          this.invokePlantCert(record.id, 4, record.first_variety, record.wood_json, record.cid);
         }
 
         break;
