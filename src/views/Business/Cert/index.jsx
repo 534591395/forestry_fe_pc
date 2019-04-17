@@ -36,6 +36,11 @@ class Cert extends Component {
           if (item.first_variety === 'first_variety_02') {
             item.cert_type = '板材类开证';
           }
+          if (item.wood_json) {
+            const wood_json = JSON.parse(item.wood_json);
+            item.variety = wood_json.woodList.length;
+          }
+          
         });
         this.setState({tableData: res.data.data});
       }
@@ -124,6 +129,7 @@ class Cert extends Component {
         message.success('审核成功');
         window.$pubsub.publish('Cert_refreshCertList');
       }
+      // TODO 提示
     });
   }
 
@@ -145,8 +151,8 @@ class Cert extends Component {
         dataIndex: 'cert_type'
       },
       {
-        title: '开证量（m³）',
-        dataIndex: 'amount'
+        title: '木材品种数量',
+        dataIndex: 'variety'
       },
       {
         title: '开证时间',
