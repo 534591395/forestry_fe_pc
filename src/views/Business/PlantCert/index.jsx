@@ -34,7 +34,7 @@ class PlantCert extends Component {
     switch (item) {
       case '通过': {
         if (record.picture_url) {
-          this.invokePlantCert(record.id, 2, record.first_variety, record.wood_json, record.cid);
+          this.invokePlantCert(record.id, 2);
         }
         else {
           this.invokePlantCert(record.id, 4, record.first_variety, record.wood_json, record.cid);
