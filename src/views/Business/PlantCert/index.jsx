@@ -12,7 +12,8 @@ class PlantCert extends Component {
     imageModal: false,
     images: [],
     timeList: [],
-    locationList: []
+    locationList: [],
+    windowsList: []
   }
 
   getPlantCertList = (data) => {
@@ -60,6 +61,20 @@ class PlantCert extends Component {
         break;
       }
     }
+  }
+  // 设置窗口
+  settingWindows = (e, record) => {
+    window.$http({
+      url: `/admin/business/windowPlantCert`,
+      method: 'PUT',
+      data: {
+        id, status, first_variety, wood_json, cid
+      }
+    }).then((res) => {
+      if(res && res.data.code == 0) {
+        message.success('添加成功');
+      }
+    });
   }
 
   invokePlantCert = (id, status, first_variety, wood_json, cid) => {
@@ -195,11 +210,20 @@ class PlantCert extends Component {
                 );
               })
             }
+            <a style={{ marginLeft: 10 }}>
+              <select onChange={(e) => this.settingWindows(e, record)}>
+                {
+                  this.state.windowsList.map( (item, key) => {
+                    <option value={item.value} key={key}>{item.name}</option>
+                  }) 
+                }
+              </select>
+            </a>
           </span>
         )
       }
     ];
-
+//窗口指定
     const pagination = {
       pageSizeOptions: ['10', '20', '50'],
       showQuickJumper: true,

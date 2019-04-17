@@ -151,7 +151,7 @@ class Cert extends Component {
         dataIndex: 'cert_type'
       },
       {
-        title: '木材品种数量',
+        title: '产品种类',
         dataIndex: 'variety'
       },
       {
