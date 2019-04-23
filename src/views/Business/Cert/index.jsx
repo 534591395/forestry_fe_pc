@@ -73,15 +73,15 @@ class Cert extends Component {
         let imageList = [
           {
             title: '1.通关无纸化放行通知单',
-            images: record.noticePic.split(',')
+            images: record.noticePic ? record.noticePic.split(',') : []
           },
           {
             title: '2.中华人民共和国海关进口货物报关单',
-            images: record.declarationPic.split(',')
+            images: record.declarationPic ? record.declarationPic.split(',') : []
           },
           {
             title: '3.合同或销售证明',
-            images: record.contractPic.split(',')
+            images: record.contractPic ? record.contractPic.split(',') : []
           }
         ];
         this.setState({imageList});
@@ -94,15 +94,15 @@ class Cert extends Component {
         let imageList = [
           {
             title: '1.太仓出入境检验检疫局进境散装木材准运通知单',
-            images: record.noticePic.split(',')
+            images: record.noticePic ? record.noticePic.split(',') : []
           },
           {
             title: '2.进口小提单',
-            images: record.ladingPic.split(',')
+            images: record.ladingPic ? record.ladingPic.split(',') : []
           },
           {
             title: '3.中华人民共和国海关进口货物报关单',
-            images: record.declarationPic.split(',')
+            images: record.declarationPic ? record.declarationPic.split(',') : []
           }
         ];
         this.setState({imageList});
@@ -225,6 +225,7 @@ class Cert extends Component {
               return <ImageItem title={ item.title } images={ item.images } key={ index }/>
             })
           }
+          <div>2134</div>
         </Modal>
       </div>
     )

@@ -214,8 +214,8 @@ class PlantCert extends Component {
               <select onChange={(e) => this.settingWindows(e, record)}>
                 {
                   this.state.windowsList.map( (item, key) => {
-                    <option value={item.value} key={key}>{item.name}</option>
-                  }) 
+                    // <option value={item.value} key={key}>{item.name}</option>
+                  })
                 }
               </select>
             </a>
