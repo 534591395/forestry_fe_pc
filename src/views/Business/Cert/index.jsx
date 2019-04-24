@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Table, message, Modal } from 'antd';
+import { Table, message, Modal, Input } from 'antd';
 
 import SearchHeader from '../components/SearchHeader';
 import ImageItem from '../components/ImageItem';
@@ -15,7 +15,9 @@ class Cert extends Component {
         title: '',
         images: []
       }
-    ]
+    ],
+    woods: [],
+    plants: {}
   }
 
   getCertList = (data) => {
@@ -29,7 +31,7 @@ class Cert extends Component {
       }
     }).then((res) => {
       if(res && res.data.code == 0) {
-        res.data.data.map(item => {
+        res.data.data.list.map(item => {
           if (item.first_variety === 'first_variety_01') {
             item.cert_type = '原木类开证';
           } else
@@ -42,7 +44,8 @@ class Cert extends Component {
           }
           
         });
-        this.setState({tableData: res.data.data});
+        this.setState({tableData: res.data.data.list});
+        this.setState({plants: res.data.data.plants});
       }
     });
   }
@@ -115,6 +118,13 @@ class Cert extends Component {
         break;
       }
     }
+    let woods = JSON.parse(record.wood_json).woodList;
+    woods.map(item => {
+      item.plant_variety = this.state.plants[item.plant_variety]
+    })
+    console.log(woods);
+    
+    this.setState({woods: woods})
   }
 
   invokeCert = (id, table, status, wood_type, first_variety, wood_json, cid) => {
@@ -132,7 +142,10 @@ class Cert extends Component {
       // TODO 提示
     });
   }
-
+  _changeValue = (e) => {
+    console.log(e);
+    
+  }
   render() {
     const statusMap = ['', '待审核', '已通过', '未通过'];
     const optMap = ['', ['查看', '通过', '驳回'], ['查看'], ['查看']];
@@ -225,7 +238,17 @@ class Cert extends Component {
               return <ImageItem title={ item.title } images={ item.images } key={ index }/>
             })
           }
-          <div>2134</div>
+          {
+            this.state.woods.map((item, index) => {
+              return <div className="detail" key={ index }>
+                      <div className="detail-group">
+                        <div className="name">{ item.plant_variety }</div>
+                        <Input size="small" defaultValue={ item.amount }  onChange ={value => this._changeValue(value)} />
+                        <span>m³</span>
+                      </div>
+                    </div>
+            })
+          }
         </Modal>
       </div>
     )
