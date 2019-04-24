@@ -18,7 +18,8 @@ class Cert extends Component {
     ],
     woods: [],
     plants: {},
-    loading: false
+    loading: false,
+    record: {}
   }
 
   getCertList = (data) => {
@@ -111,6 +112,7 @@ class Cert extends Component {
         ];
         this.setState({imageList});
 
+        this.setState({record: record});
         this.setState({imageModal: true});
 
         break;
@@ -119,13 +121,15 @@ class Cert extends Component {
         break;
       }
     }
-    let woods = JSON.parse(record.wood_json).woodList;
-    woods.map(item => {
-      item.plant_variety = this.state.plants[item.plant_variety]
-    })
-    console.log(woods);
     
-    this.setState({woods: woods})
+    if (item === '查看') {
+      // 转换类型
+      let woods = JSON.parse(record.wood_json).woodList;
+      woods.map(item => {
+        item.plant_variety_txt = this.state.plants[item.plant_variety]
+      })
+      this.setState({woods: woods})
+    }
   }
 
   invokeCert = (id, table, status, wood_type, first_variety, wood_json, cid) => {
@@ -145,12 +149,23 @@ class Cert extends Component {
   }
   _changeValue = (e, index) => {
     console.log(index);
-    
-    console.log(e.target.value);
+    let woods = this.state.woods;
+    woods[index].amount = e.target.value;
+    this.setState({woods: woods})
     
   }
-  handleOk() {
+  handleOk = () => {
+    let record = this.state.record;
+    let woods = this.state.woods
+    // console.log(woods);
+    woods.map(item => {
+      delete item.plant_variety_txt
+    })
+    record.wood_json = JSON.stringify({woodList: woods});
+    // console.log(record);
+    this.operateRecord('通过', record.cert_type, record);
 
+    this.setState({imageModal: false});
   }
   handleCancel() {
     
@@ -257,7 +272,7 @@ class Cert extends Component {
             {
               this.state.woods.map((item, index) => {
                 return <div className="detail-group" key={ index }>
-                          <div className="name">{ item.plant_variety }</div>
+                          <div className="name">{ item.plant_variety_txt }</div>
                           <Input size="small" defaultValue={ item.amount }  onChange ={value => this._changeValue(value, index)} />
                           <span>m³</span>
                         </div>
