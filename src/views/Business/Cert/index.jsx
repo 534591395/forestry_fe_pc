@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Table, message, Modal, Input } from 'antd';
+import { Table, message, Modal, Input, Button } from 'antd';
 
 import SearchHeader from '../components/SearchHeader';
 import ImageItem from '../components/ImageItem';
@@ -17,7 +17,8 @@ class Cert extends Component {
       }
     ],
     woods: [],
-    plants: {}
+    plants: {},
+    loading: false
   }
 
   getCertList = (data) => {
@@ -142,14 +143,22 @@ class Cert extends Component {
       // TODO 提示
     });
   }
-  _changeValue = (e) => {
-    console.log(e);
+  _changeValue = (e, index) => {
+    console.log(index);
+    
+    console.log(e.target.value);
+    
+  }
+  handleOk() {
+
+  }
+  handleCancel() {
     
   }
   render() {
     const statusMap = ['', '待审核', '已通过', '未通过'];
     const optMap = ['', ['查看', '通过', '驳回'], ['查看'], ['查看']];
-
+    const { loading } = this.state;
     const columns = [
       {
         title: '开证单编号',
@@ -232,23 +241,29 @@ class Cert extends Component {
           maskClosable={ false }
           footer={ null }
           onCancel={ () => { this.setState({imageModal: false}) } }
+          footer={[
+            <Button key="back" onClick={this.handleCancel}>驳回</Button>,
+            <Button key="submit" type="primary" loading={loading} onClick={this.handleOk}>
+              通过
+            </Button>,
+          ]}
         >
           {
             this.state.imageList.map((item, index) => {
               return <ImageItem title={ item.title } images={ item.images } key={ index }/>
             })
           }
-          {
-            this.state.woods.map((item, index) => {
-              return <div className="detail" key={ index }>
-                      <div className="detail-group">
-                        <div className="name">{ item.plant_variety }</div>
-                        <Input size="small" defaultValue={ item.amount }  onChange ={value => this._changeValue(value)} />
-                        <span>m³</span>
-                      </div>
-                    </div>
-            })
-          }
+          <div className="detail">
+            {
+              this.state.woods.map((item, index) => {
+                return <div className="detail-group" key={ index }>
+                          <div className="name">{ item.plant_variety }</div>
+                          <Input size="small" defaultValue={ item.amount }  onChange ={value => this._changeValue(value, index)} />
+                          <span>m³</span>
+                        </div>
+              })
+            }
+          </div>
         </Modal>
       </div>
     )
