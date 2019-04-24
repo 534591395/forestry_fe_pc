@@ -141,7 +141,12 @@ class Cert extends Component {
       }
     }).then((res) => {
       if(res && res.data.code == 0) {
+        if (status == 3) {
+        message.success('驳回成功');
+        }
+        if (status == 2) {
         message.success('审核成功');
+        }
         window.$pubsub.publish('Cert_refreshCertList');
       }
       // TODO 提示
@@ -154,6 +159,7 @@ class Cert extends Component {
     this.setState({woods: woods})
     
   }
+  // 弹出查看后审核按钮
   handleOk = () => {
     let record = this.state.record;
     let woods = this.state.woods
@@ -167,8 +173,10 @@ class Cert extends Component {
 
     this.setState({imageModal: false});
   }
-  handleCancel() {
-    
+  // 弹出查看后驳回按钮
+  handleCancel = () => {
+    this.operateRecord('驳回', this.state.record.cert_type, this.state.record);
+    this.setState({imageModal: false});
   }
   render() {
     const statusMap = ['', '待审核', '已通过', '未通过'];
