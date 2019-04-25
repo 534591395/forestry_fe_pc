@@ -89,9 +89,11 @@ class Cert extends Component {
             images: record.contractPic ? record.contractPic.split(',') : []
           }
         ];
-        this.setState({imageList});
+        //this.setState({imageList});
 
-        this.setState({imageModal: true});
+        this.setState({record: record, imageModal: true, imageList: imageList}, () => {
+          this.defautModule();
+        });
 
         break;
       }
@@ -110,10 +112,11 @@ class Cert extends Component {
             images: record.declarationPic ? record.declarationPic.split(',') : []
           }
         ];
-        this.setState({imageList});
+        //this.setState({imageList});
 
-        this.setState({record: record});
-        this.setState({imageModal: true});
+        this.setState({record: record, imageModal: true, imageList: imageList}, () => {
+          this.defautModule();
+        });
 
         break;
       }
@@ -121,15 +124,17 @@ class Cert extends Component {
         break;
       }
     }
-    
-    if (item === '查看') {
+
+  }
+  // 弹出框里重置信息
+  defautModule = () => {
       // 转换类型
-      let woods = JSON.parse(record.wood_json).woodList;
+      let woods = JSON.parse(this.state.record.wood_json).woodList;
       woods.map(item => {
-        item.plant_variety_txt = this.state.plants[item.plant_variety]
+        item.plant_variety_txt = this.state.plants[item.plant_variety];
       })
-      this.setState({woods: woods})
-    }
+      console.log(woods)
+      this.setState({woods: woods});
   }
   // 通过和驳回请求
   invokeCert = (id, table, status, wood_type, first_variety, wood_json, cid) => {
@@ -180,8 +185,8 @@ class Cert extends Component {
   }
   render() {
     const statusMap = ['', '待审核', '已通过', '未通过'];
-    const optMap = ['', ['查看', '通过', '驳回'], ['查看'], ['查看']];
-    const { loading } = this.state;
+    const optMap = ['', ['查看'], ['查看'], ['查看']];
+    const { loading, record } = this.state;
     const columns = [
       {
         title: '开证单编号',
@@ -262,14 +267,13 @@ class Cert extends Component {
           title="查看" 
           visible={ this.state.imageModal } 
           maskClosable={ false }
+          destroyOnClose={true}
           footer={ null }
           onCancel={ () => { this.setState({imageModal: false}) } }
-          footer={[
-            <Button key="back" onClick={this.handleCancel}>驳回</Button>,
-            <Button key="submit" type="primary" loading={loading} onClick={this.handleOk}>
-              通过
-            </Button>,
-          ]}
+          footer={ record.status == 1 ? [
+            <Button key="submit" type="primary" loading={loading} onClick={this.handleOk}>通过</Button>,
+            <Button key="back" onClick={this.handleCancel}>驳回</Button>
+          ]: []}
         >
           {
             this.state.imageList.map((item, index) => {
@@ -281,7 +285,7 @@ class Cert extends Component {
               this.state.woods.map((item, index) => {
                 return <div className="detail-group" key={ index }>
                           <div className="name">{ item.plant_variety_txt }</div>
-                          <Input size="small" defaultValue={ item.amount }  onChange ={value => this._changeValue(value, index)} />
+                          <Input size="small" value={ item.amount }  onChange ={value => this._changeValue(value, index)} />
                           <span>m³</span>
                         </div>
               })
