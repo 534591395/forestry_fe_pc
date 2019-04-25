@@ -131,7 +131,7 @@ class Cert extends Component {
       this.setState({woods: woods})
     }
   }
-
+  // 通过和驳回请求
   invokeCert = (id, table, status, wood_type, first_variety, wood_json, cid) => {
     window.$http({
       url: `/admin/business/invokeCert`,
