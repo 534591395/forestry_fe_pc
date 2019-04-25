@@ -44,8 +44,13 @@ class PlantCert extends Component {
         break;
       }
       case '驳回': {
-        this.invokePlantCert(record.id, 3);
-
+        // 若已经上传了证书图片，此时点击驳回后，状态改成 待上传图片
+        if (record.picture_url) {
+          // 这里约定 状态传 -2，由服务端重置状态为 4
+          this.invokePlantCert(record.id, -2);
+        } else {
+          this.invokePlantCert(record.id, 3);
+        }
         break;
       }
       case '查看': {
