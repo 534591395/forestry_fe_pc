@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { Modal, Carousel, Icon } from 'antd';
+import { Modal, Carousel, Icon, Button } from 'antd';
 
 
 class ImageItem extends Component {
@@ -14,7 +14,10 @@ class ImageItem extends Component {
   state = {
     imageDetailModal: false,
     imageSrc: '',
-    index: 0
+    index: 0,
+    current: 90,
+    transStyle: '',
+    height: ''
   }
 
   setImageModalData = (imageSrc) => {
@@ -41,7 +44,30 @@ class ImageItem extends Component {
       this.refs.Carousel.next();
     }
   }
+  constructor(props) {
+    super(props);
 
+    this.saveRef = ref => {this.refDom = ref};
+    this.translate = this.translate.bind(this);
+  }
+  //  点击选择  设置当前current旋转角度为上一次+90°
+  translate = (e) => {
+    const {clientWidth, clientHeight} = this.refDom;
+    console.log(clientWidth, clientHeight, this.refDom);
+    this.setState({
+        current:(this.state.current+90)%360,
+        transStyle:'rotate('+this.state.current+'deg)'
+    });
+    if (this.state.current/90%2 == 0) {
+      this.setState({
+        height: '100%'
+      });
+    } else {
+      this.setState({
+        height: clientWidth + 'px'
+      });
+    }
+  }
   render() {
     const { index } = this.state;
     return (
@@ -83,15 +109,19 @@ class ImageItem extends Component {
           <p>{ this.props.timeList && this.props.locationList[index] }</p>
         </div>
         {/* </div> */}
-
+ 
         <Modal 
           width={1000} 
           title="查看图片" 
           visible={ this.state.imageDetailModal } 
           footer={ null }
-          onCancel={ () => { this.setState({imageDetailModal: false}) } }
+          onCancel={ () => { this.setState({imageDetailModal: false, current: 90, transStyle:'rotate('+0+'deg)'}) } }
         >
-          <img src={ this.state.imageSrc } alt="" className="img_modal" />
+          <img ref={this.saveRef} src={ this.state.imageSrc } alt="" className="img_modal" style={{ transform:this.state.transStyle, height: this.state.height}} />
+          <div style={{textAlign: "center", marginTop: "24px"}}>
+
+            <Button onClick = { this.translate }>旋转<Icon type="reload" theme="outlined" /></Button>
+          </div>
         </Modal>
       </div>
     )
