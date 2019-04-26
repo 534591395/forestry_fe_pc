@@ -54,6 +54,18 @@ export default {
         title: '企业信息详情', 
         component: 'CompanyDetail',
         showInMenu: false
+      },
+      {
+        key: '/app/company/companyInventory', 
+        title: '企业库存管理', 
+        component: 'CompanyInventory',
+        showInMenu: true
+      },
+      {
+        key: '/app/company/inventoryDetail', 
+        title: '企业库存详情', 
+        component: 'InventoryDetail',
+        showInMenu: false
       }
     ]
   },
