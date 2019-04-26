@@ -62,7 +62,7 @@ export default {
     subs: [
       {
         key: '/app/business/cert', 
-        title: '开证管理', 
+        title: '提单录入管理', 
         component: 'Cert',
         showInMenu: true
       },

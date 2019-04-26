@@ -268,7 +268,6 @@ class Cert extends Component {
           visible={ this.state.imageModal } 
           maskClosable={ false }
           destroyOnClose={true}
-          footer={ null }
           onCancel={ () => { this.setState({imageModal: false}) } }
           footer={ record.status == 1 ? [
             <Button key="submit" type="primary" loading={loading} onClick={this.handleOk}>通过</Button>,
@@ -285,7 +284,7 @@ class Cert extends Component {
               this.state.woods.map((item, index) => {
                 return <div className="detail-group" key={ index }>
                           <div className="name">{ item.plant_variety_txt }</div>
-                          <Input size="small" value={ item.amount }  onChange ={value => this._changeValue(value, index)} />
+                          <Input size="small" value={ item.amount } type="number" disabled={record.status != 1} onChange ={value => this._changeValue(value, index)} />
                           <span>m³</span>
                         </div>
               })
