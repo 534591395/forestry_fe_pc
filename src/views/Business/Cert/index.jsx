@@ -67,13 +67,13 @@ class Cert extends Component {
       }
       case '驳回原木类开证': {
         // this.invokeCert(record.id, 'wood_cert', 3);
-        this.refuse(record.id, 'wood_cert', 3, record.first_variety, refuse_reason);
+        this.refuse(record.id, 'wood_cert', 3, record.first_variety, refuse_reason, record.cid);
 
         break;
       }
       case '驳回板材类开证': {
         // this.invokeCert(record.id, 'wood_cert', 3);
-        this.refuse(record.id, 'wood_cert', 3, record.first_variety, refuse_reason);
+        this.refuse(record.id, 'wood_cert', 3, record.first_variety, refuse_reason, record.cid);
 
         break;
       }
@@ -140,12 +140,12 @@ class Cert extends Component {
       this.setState({woods: woods});
   }
   // 驳回
-  refuse(id, table, status, first_variety, refuse_reason) {
+  refuse(id, table, status, first_variety, refuse_reason, cid) {
     window.$http({
       url: `/admin/business/invokeCert`,
       method: 'PUT',
       data: {
-        id, table, status, first_variety, refuse_reason
+        id, table, status, first_variety, refuse_reason, cid
       }
     }).then((res) => {
       if(res && res.data.code == 0) {
