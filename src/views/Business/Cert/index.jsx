@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Table, message, Modal, Input, Button } from 'antd';
+import { Table, message, Modal, Input, Button, Form } from 'antd';
 
 import SearchHeader from '../components/SearchHeader';
 import ImageItem from '../components/ImageItem';
@@ -19,7 +19,8 @@ class Cert extends Component {
     woods: [],
     plants: {},
     loading: false,
-    record: {}
+    record: {},
+    show_refuse_reason: false
   }
 
   getCertList = (data) => {
@@ -52,7 +53,7 @@ class Cert extends Component {
     });
   }
 
-  operateRecord = (item, type, record) => {
+  operateRecord = (item, type, record, refuse_reason) => {
     switch (item + type) {
       case '通过原木类开证': {
         this.invokeCert(record.id, 'wood_cert', 2, 1, record.first_variety, record.wood_json, record.cid);
@@ -65,12 +66,14 @@ class Cert extends Component {
         break;
       }
       case '驳回原木类开证': {
-        this.invokeCert(record.id, 'wood_cert', 3);
+        // this.invokeCert(record.id, 'wood_cert', 3);
+        this.refuse(record.id, 'wood_cert', 3, record.first_variety, refuse_reason);
 
         break;
       }
       case '驳回板材类开证': {
-        this.invokeCert(record.id, 'wood_cert', 3);
+        // this.invokeCert(record.id, 'wood_cert', 3);
+        this.refuse(record.id, 'wood_cert', 3, record.first_variety, refuse_reason);
 
         break;
       }
@@ -136,7 +139,22 @@ class Cert extends Component {
       console.log(woods)
       this.setState({woods: woods});
   }
-  // 通过和驳回请求
+  // 驳回
+  refuse(id, table, status, first_variety, refuse_reason) {
+    window.$http({
+      url: `/admin/business/invokeCert`,
+      method: 'PUT',
+      data: {
+        id, table, status, first_variety, refuse_reason
+      }
+    }).then((res) => {
+      if(res && res.data.code == 0) {
+        message.success('驳回成功');
+        window.$pubsub.publish('Cert_refreshCertList');
+      }
+    });
+  }
+  // 通过请求
   invokeCert = (id, table, status, wood_type, first_variety, wood_json, cid) => {
     window.$http({
       url: `/admin/business/invokeCert`,
@@ -146,12 +164,13 @@ class Cert extends Component {
       }
     }).then((res) => {
       if(res && res.data.code == 0) {
-        if (status == 3) {
-        message.success('驳回成功');
-        }
-        if (status == 2) {
+        // if (status == 3) {
+        // message.success('驳回成功');
+        // }
+        // if (status == 2) {
+        // message.success('审核成功');
+        // }
         message.success('审核成功');
-        }
         window.$pubsub.publish('Cert_refreshCertList');
       }
       // TODO 提示
@@ -180,10 +199,21 @@ class Cert extends Component {
   }
   // 弹出查看后驳回按钮
   handleCancel = () => {
-    this.operateRecord('驳回', this.state.record.cert_type, this.state.record);
-    this.setState({imageModal: false});
+    if (!this.state.show_refuse_reason) {
+      this.setState({show_refuse_reason: true});
+      return
+    }
+    let record = this.state.record;
+    // this.setState({imageModal: false});
+    this.props.form.validateFields((err, values) => {
+      if (!err) {
+        this.operateRecord('驳回', record.cert_type, record, values.refuse_reason);
+        this.setState({imageModal: false});
+      }
+    });
   }
   render() {
+    const { getFieldDecorator } = this.props.form;
     const statusMap = ['', '待审核', '已通过', '未通过'];
     const optMap = ['', ['查看'], ['查看'], ['查看']];
     const { loading, record } = this.state;
@@ -270,6 +300,7 @@ class Cert extends Component {
           destroyOnClose={true}
           onCancel={ () => { this.setState({imageModal: false}) } }
           footer={ record.status == 1 ? [
+
             <Button key="submit" type="primary" loading={loading} onClick={this.handleOk}>通过</Button>,
             <Button key="back" onClick={this.handleCancel}>驳回</Button>
           ]: []}
@@ -279,21 +310,33 @@ class Cert extends Component {
               return <ImageItem title={ item.title } images={ item.images } key={ index }/>
             })
           }
-          <div className="detail">
+          <Form className="detail">
             {
               this.state.woods.map((item, index) => {
-                return <div className="detail-group" key={ index }>
+                return (
+                        <div className="detail-group" key={ index }>
                           <div className="name">{ item.plant_variety_txt }</div>
                           <Input size="small" value={ item.amount } type="number" disabled={record.status != 1} onChange ={value => this._changeValue(value, index)} />
                           <span>m³</span>
                         </div>
+                        )
               })
             }
-          </div>
+            {
+              (record.status == 1 && this.state.show_refuse_reason) ? 
+                <Form.Item label="驳回原因: ">
+                        { getFieldDecorator('refuse_reason', {
+                          rules: [{ required: true, message: '请填写驳回原因' }]
+                        })(
+                          <Input style={{ width: 300 }} />
+                        ) }
+                </Form.Item> : null
+            }
+          </Form>
         </Modal>
       </div>
     )
   }
 }
 
-export default Cert;
+export default Form.create()(Cert);
