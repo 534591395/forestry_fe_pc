@@ -268,7 +268,6 @@ class Cert extends Component {
           visible={ this.state.imageModal } 
           maskClosable={ false }
           destroyOnClose={true}
-          footer={ null }
           onCancel={ () => { this.setState({imageModal: false}) } }
           footer={ record.status == 1 ? [
             <Button key="submit" type="primary" loading={loading} onClick={this.handleOk}>通过</Button>,
