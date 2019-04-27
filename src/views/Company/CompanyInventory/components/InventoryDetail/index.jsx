@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Tabs, Form, Table, Button, Input, Modal, Select, InputNumber } from 'antd';
+import { Tabs, Form, Table, Button, Input, Modal, Select, InputNumber, message } from 'antd';
 
 import './index.less';
 const TabPane = Tabs.TabPane;
@@ -7,11 +7,8 @@ const Option = Select.Option;
 class InventoryDetail extends Component {
   state = {
     tableData: [],
-    type: 'firstVariety01',
+    type: 'first_variety_01',
     showAdd: false,
-    addValue: '',
-    addWoodsValue: '',
-    addCount: 10
   }
   // 原木类型选择
   callbackFn = (key) => {
@@ -23,7 +20,9 @@ class InventoryDetail extends Component {
   
   // 选择木材品种
   selChange = (value) => {
-    this.setState({addValue: value})
+    this.props.form.setFieldsValue({
+      plant_variety: value
+    })
   }
   // 选择木材品种
   selWoodsChange = (value) => {
@@ -34,28 +33,32 @@ class InventoryDetail extends Component {
   }
   // 添加时开证量改变
   countChange = (value) => {
-    this.setState({addCount: value})
+    this.props.form.setFieldsValue({
+      amount: value
+    })
   }
   // 添加
   addOk = () => {
-    let data = {
-      first_variety: this.state.type,
-      cid: this.props.info.id,
-      plant_variety: this.state.addValue,
-      amount: this.state.addCount
-    }
     // if (this.state.type === 'firstVariety02') {
     //   data.wood_variety = this.state.addWoodsValue
     // }
     this.props.form.validateFields((err, values) => {
+      console.log(values);
+      
       if (!err) {
         window.$http({
           url: '/admin/company/editorCompanyInventory',
           method: 'POST',
-          data: data
+          data: {
+            first_variety: this.state.type,
+            cid: this.props.info.id,
+            plant_variety: values.plant_variety,
+            amount: values.amount
+          }
         }).then((res) => {
           if(res && res.data.code == 0) {
             this.setState({showAdd: false})
+            message.success('添加成功');
           }
         });
       }
@@ -109,11 +112,11 @@ class InventoryDetail extends Component {
             <div>可用板材量: { this.props.info.firstVariety02Amount } m³</div>
           </div>
         </div>
-        <Tabs defaultActiveKey="firstVariety01" onChange={ this.callbackFn }>
-          <TabPane tab="原木类" key="firstVariety01">
+        <Tabs defaultActiveKey="first_variety_01" onChange={ this.callbackFn }>
+          <TabPane tab="原木类" key="first_variety_01">
 
           </TabPane>
-          <TabPane tab="板材类" key="firstVariety02">
+          <TabPane tab="板材类" key="first_variety_02">
 
           </TabPane>
         </Tabs>
@@ -148,11 +151,10 @@ class InventoryDetail extends Component {
                               optionFilterProp="children"
                               onChange={this.selChange}
                               onSearch={this.onSearch}
-                              value={this.state.addValue}
                               filterOption={(input, option) => option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0}
                             >
-                              {this.props.plants.map (item => {
-                                return <Option value={item.key}>{item.value}</Option>
+                              {this.props.plants.map ((item, index) => {
+                                return <Option value={item.key} key={index}>{item.value}</Option>
                               })}
                             </Select>
                           ) }
@@ -181,7 +183,7 @@ class InventoryDetail extends Component {
                           { getFieldDecorator('amount', {
                             rules: [{ required: true, message: '请填写开证量' }]
                           })(
-                            <InputNumber min={1} value={this.state.addCount} onChange={this.countChange} />
+                            <InputNumber min={1} onChange={this.countChange} />
                           ) }
             </Form.Item>
           </Form>
