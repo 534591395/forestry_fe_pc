@@ -1,12 +1,19 @@
 import React, { Component } from 'react';
-import { Button, Input, Table, Form, Select } from 'antd';
+import { Button, Input, Table, Form, Select, Modal } from 'antd';
 
+
+import InventoryDetail from './components/InventoryDetail';
 import './index.less';
 
 class CompanyInventory extends Component {
   state = {
     tableData: [],
-    companyType: []
+    companyType: [],
+    showDetail: false,
+    woodDetail: {},
+    info: {},
+    plants: [],
+    woods: [],
   }
 
   async componentDidMount() {
@@ -45,7 +52,9 @@ class CompanyInventory extends Component {
       }
     }).then((res) => {
       if(res && res.data.code == 0) {
-        this.setState({tableData: res.data.data});
+        this.setState({tableData: res.data.data.list});
+        this.setState({plants: res.data.data.plants});
+        this.setState({woods: res.data.data.woods});
       }
     });
   }
@@ -55,13 +64,21 @@ class CompanyInventory extends Component {
     this.getCompanyInfo(value.companyType, value.name ? value.name : '', value.status, value.store ? value.store : '');
   }
 
-  skipNewPath = (id) => {
-    this.props.history.push({
-      pathname: '/app/company/inventoryDetail',
-      search: window.$querystring.stringify({
-        id
-      })
-    });
+  skipNewPath = (record) => {
+    this.setState({showDetail: true})
+    this.setState({woodDetail: record.woodDetail})
+    this.setState({info: record})
+    // this.props.history.push({
+    //   pathname: '/app/company/inventoryDetail',
+    //   search: window.$querystring.stringify({
+    //     id
+    //   })
+    // });
+  }
+  changeTableDate = (val) => {
+    // console.log(val);
+    this.setState({woodDetail: val})
+    
   }
 
   render() {
@@ -84,18 +101,18 @@ class CompanyInventory extends Component {
       },
       {
         title: '可用原木量',
-        dataIndex: 'companyType'
+        dataIndex: 'firstVariety01Amount'
       },
       {
         title: '可用板材量',
-        dataIndex: 'store'
+        dataIndex: 'firstVariety02Amount'
       },
       {
         title: '操作',
         width: 200,
         render: (text, record) => (
           <span>
-            <a href="javascript: void(0);" style={{ marginRight: '15px' }} onClick={ ($event) => { this.skipNewPath(record.id) } }>查看</a>
+            <a href="javascript: void(0);" style={{ marginRight: '15px' }} onClick={ ($event) => { this.skipNewPath(record) } }>查看</a>
           </span>
         )
       }
@@ -169,6 +186,15 @@ class CompanyInventory extends Component {
         </div>
 
         <Table columns={ columns } dataSource={ this.state.tableData } pagination={ pagination } bordered rowKey={ record => record.id } />
+        <Modal
+          title="查看"
+          visible={this.state.showDetail}
+          onOk={this.handleOk}
+          onCancel={() => this.setState({showDetail: false})}
+          width={1000}
+        >
+          <InventoryDetail woodDetail={ this.state.woodDetail } info={ this.state.info } plants={this.state.plants} woods={this.state.woods} changeTable={this.changeTableDate.bind(this)}></InventoryDetail>
+        </Modal>
       </div>
     )
   }
