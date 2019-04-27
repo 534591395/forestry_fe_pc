@@ -137,7 +137,7 @@ class PlantCert extends Component {
   selChange() {
 
   }
-   // 第一次驳回
+   // 驳回
    handleCancel = () => {
     if (!this.state.show_refuse_reason) {
       this.setState({show_refuse_reason: true});
