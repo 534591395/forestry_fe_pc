@@ -93,6 +93,48 @@ class CompanyDetail extends Component {
     });
   }
 
+  // 企业停开
+  stop = (status) => {
+    const {id} = this.state.company;
+    window.$http({
+      url: '/admin/company/stop',
+      method: 'PUT',
+      data: {
+        id: id,
+        status: status
+      }
+    }).then((res) => {
+      if(res && res.data.code == 0) {
+        let company = this.state.company;
+        company.status = 5;
+        this.setState({
+          company: company
+        });
+      }
+    });
+  }
+
+  // 企业开启
+  start = (status) => {
+    const {id} = this.state.company;
+    window.$http({
+      url: '/admin/company/stop',
+      method: 'PUT',
+      data: {
+        id: id,
+        status: status
+      }
+    }).then((res) => {
+      if(res && res.data.code == 0) {
+        let company = this.state.company;
+        company.status = status;
+        this.setState({
+          company: company
+        });
+      }
+    });
+  }
+
   render() {
     const status = ['', '待审核', '已注册', '未通过', '已注销', '已停开'];
     const statusColor = ['', '#108ee9', '#87d068', '#f50', '#eee'];
@@ -106,6 +148,28 @@ class CompanyDetail extends Component {
                 <Form.Item label="公司名称">
                   { this.state.company.name }
                   <Tag color={ statusColor[this.state.company.status] } style={{ marginLeft: 24 }}>{ status[this.state.company.status] }</Tag>
+                    {
+                      this.state.company.status == 2 ? 
+                        <Button 
+                        type="primary" 
+                        onClick={ () => { this.stop(5) } }
+                        >
+                        停开
+                        </Button>
+                     : 
+                     null
+                    }
+                    {
+                      this.state.company.status == 5 ? 
+                        <Button 
+                        type="primary" 
+                        onClick={ () => { this.start(2) } }
+                        >
+                        开启
+                        </Button>
+                     : 
+                     null
+                    }
                 </Form.Item>
               </Col>
 

@@ -399,6 +399,10 @@ class PlantCert extends Component {
                 <div className="name">相应的报检单号</div>
                 <div className="num">{info.report_number} </div>
               </div>
+              <div className="item">
+                <div className="name">领取窗口号</div>
+                <div className="num">{info.windows || ''} </div>
+              </div>
             </div>
           </div>
             {!this.state.show_refuse_reason && status == 1 && this.state.images.length == 0 ? <Form.Item label="领证窗口: ">
