@@ -120,7 +120,7 @@ class InventoryDetail extends Component {
       <div className="inventory-detail">
         <div className="info">
           <div className="label">
-            <div>公司:{this.props.info.corporation}</div>
+            <div>公司:{this.props.info.name}</div>
             <div>信用代码:{ this.props.info.code }</div>
           </div>
           <div className="num">

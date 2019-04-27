@@ -299,8 +299,7 @@ class Cert extends Component {
           maskClosable={ false }
           destroyOnClose={true}
           onCancel={ () => { this.setState({imageModal: false}) } }
-          footer={ record.status !== 1 ? [
-
+          footer={ record.status == 1 ? [
             <Button key="submit" type="primary" loading={loading} onClick={this.handleOk}>通过</Button>,
             <Button key="back" onClick={this.handleCancel}>驳回</Button>
           ]: []}
@@ -323,7 +322,7 @@ class Cert extends Component {
               })
             }
             {
-              (record.status !== 1 && this.state.show_refuse_reason) ? 
+              (record.status == 1 && this.state.show_refuse_reason) ? 
                 <Form.Item label="驳回原因: ">
                         { getFieldDecorator('refuse_reason', {
                           rules: [{ required: true, message: '请填写驳回原因' }]
