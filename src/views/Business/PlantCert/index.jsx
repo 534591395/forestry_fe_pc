@@ -326,11 +326,10 @@ class PlantCert extends Component {
           <div className="info"> 
             <div className="header">
               <div className="item">公司: {info.name}</div>
-              <div className="item">信用代码： 234</div>
-              <div className="item">单位负责人: {info.header_name}</div>
-              <div className="item">姓名：</div>
-              <div className="item">身份证： </div>
-              <div className="item">联系电话: {info.phone}</div>
+              <div className="item">信用代码： {info.code}</div>
+              <div className="item">单位负责人（承办人）姓名: {info.header_name}</div>
+              <div className="item">身份证： {info.header_identity}</div>
+              <div className="item">联系电话: {info.header_phone}</div>
             </div>
             <div className="content">
               <div className="title">原木类</div>
@@ -354,51 +353,51 @@ class PlantCert extends Component {
               <div className="title">运输信息</div>
               <div className="item">
                 <div className="name">车船数</div>
-                <div className="num">sdf m³</div>
-                <div className="num">sdf m³</div>
+                <div className="num">{info.car_amount} 辆</div>
+                <div className="num">{info.every_car_amount} m³/车</div>
               </div>
               <div className="item">
                 <div className="name">包装方式</div>
-                <div className="num">sdf m³</div>
+                <div className="num">{info.packaging} </div>
               </div>
               <div className="item">
                 <div className="name">规格</div>
-                <div className="num">sdf m³</div>
+                <div className="num">{info.standard} </div>
               </div>
             </div>
             <div className="content">
               <div className="title">收货信息</div>
               <div className="item">
                 <div className="name">收货单位（个人）</div>
-                <div className="num">张三</div>
+                <div className="num">{info.receive_person}</div>
               </div>
               <div className="item">
                 <div className="name">收货单位详细地址</div>
-                <div className="num">太仓市太仓市太仓市太仓市太仓市</div>
+                <div className="num">{info.receive_address}</div>
               </div>
               <div className="item">
                 <div className="name">收货单位个人（电话）</div>
-                <div className="num">1232432 </div>
+                <div className="num">{info.phone} </div>
               </div>
               <div className="item">
                 <div className="name">收货联系人身份证号码</div>
-                <div className="num">1232432 </div>
+                <div className="num">{info.person_id} </div>
               </div>
               <div className="item">
                 <div className="name">日期</div>
-                <div className="num">1232432 </div>
+                <div className="num">{info.date_time} </div>
               </div>
               <div className="item">
                 <div className="name">申请人</div>
-                <div className="num">1232432 </div>
+                <div className="num">{info.apply_person} </div>
               </div>
               <div className="item">
                 <div className="name">承运人</div>
-                <div className="num">1232432 </div>
+                <div className="num">{info.transport_person} </div>
               </div>
               <div className="item">
                 <div className="name">相应的报检单号</div>
-                <div className="num">1232432 </div>
+                <div className="num">{info.report_number} </div>
               </div>
             </div>
           </div>
