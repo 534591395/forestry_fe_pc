@@ -40,14 +40,14 @@ class PlantCert extends Component {
     });
   }
 
-  operateRecord = (item, record, windows) => {
+  operateRecord = (item, record, param) => {
     switch (item) {
       case '通过': {
         if (record.picture_url) {
-          this.invokePlantCert(record.id, 2);
+          this.invokePlantCert(record.id, 2, null, record.cid);
         }
         else {
-          this.invokePlantCert(record.id, 4, record.first_variety, record.wood_json, record.cid, windows);
+          this.invokePlantCert(record.id, 4, record.wood_json, record.cid, param);
         }
 
         break;
@@ -56,9 +56,9 @@ class PlantCert extends Component {
         // 若已经上传了证书图片，此时点击驳回后，状态改成 待上传图片
         if (record.picture_url) {
           // 这里约定 状态传 -2，由服务端重置状态为 4
-          this.invokePlantCert(record.id, -2, windows);
+          this.refuse(record.id, -2, param, record.cid);
         } else {
-          this.invokePlantCert(record.id, 3, windows);
+          this.refuse(record.id, 3, param, record.cid);
         }
         break;
       }
@@ -105,32 +105,60 @@ class PlantCert extends Component {
     });
   }
   // 审核请求
-  invokePlantCert = (id, status, first_variety, wood_json, cid, windows) => {
+  invokePlantCert = (id, status, wood_json, cid, windows) => {
     window.$http({
       url: `/admin/business/invokePlantCert`,
       method: 'PUT',
       data: {
-        id, status, first_variety, wood_json, cid, windows
+        id, status, wood_json, cid, windows
       }
     }).then((res) => {
       if(res && res.data.code == 0) {
         message.success('审核成功');
-        window.$pubsub.publish('Cert_refreshCertList');
+        this.setState({
+          showInfo: false
+        }, () => {
+          let tableData = this.state.tableData;
+          tableData.map( (item, index) => {
+            if (item.id == id) {
+              item.status = status;
+              if (windows) {
+                item.windows = windows;
+              }
+            }
+          } );
+          this.setState({
+            tableData: tableData
+          });
+        });
       }
     });
   }
   // 驳回请求
-  refuse = (id, status, refuse_reason) => {
+  refuse = (id, status, refuse_reason, cid) => {
     window.$http({
       url: `/admin/business/invokePlantCert`,
       method: 'PUT',
       data: {
-        id, status, refuse_reason
+        id, status, refuse_reason, cid
       }
     }).then((res) => {
       if(res && res.data.code == 0) {
         message.success('驳回成功');
-        // window.$pubsub.publish('Cert_refreshCertList');
+        this.setState({
+          showInfo: false
+        }, () => {
+          let tableData = this.state.tableData;
+          tableData.map( (item, index) => {
+            if (item.id == id) {
+              item.status = status == -2 ? 1 : status;
+              item.refuse_reason = refuse_reason;
+            }
+          } );
+          this.setState({
+            tableData: tableData
+          });
+        });
       }
     });
   }
