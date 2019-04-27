@@ -80,6 +80,11 @@ class CompanyInventory extends Component {
     this.setState({woodDetail: val})
     
   }
+  addSuccess = (val) => {
+    // console.log(val);
+    this.setState({woodDetail: val})
+    
+  }
 
   render() {
     const status = ['', '待审核', '已注册', '未通过', '已注销'];
@@ -193,7 +198,7 @@ class CompanyInventory extends Component {
           onCancel={() => this.setState({showDetail: false})}
           width={1000}
         >
-          <InventoryDetail woodDetail={ this.state.woodDetail } info={ this.state.info } plants={this.state.plants} woods={this.state.woods} changeTable={this.changeTableDate.bind(this)}></InventoryDetail>
+          <InventoryDetail woodDetail={ this.state.woodDetail } info={ this.state.info } plants={this.state.plants} woods={this.state.woods} changeTable={this.changeTableDate.bind(this)} addSuccess={this.addSuccess.bind(this)}></InventoryDetail>
         </Modal>
       </div>
     )

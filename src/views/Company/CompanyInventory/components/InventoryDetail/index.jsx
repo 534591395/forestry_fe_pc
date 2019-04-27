@@ -43,36 +43,52 @@ class InventoryDetail extends Component {
     //   data.wood_variety = this.state.addWoodsValue
     // }
     this.props.form.validateFields((err, values) => {
-      console.log(values);
-      
+      // console.log(values);
       if (!err) {
-        window.$http({
-          url: '/admin/company/editorCompanyInventory',
-          method: 'POST',
-          data: {
-            first_variety: this.state.type,
-            cid: this.props.info.id,
-            plant_variety: values.plant_variety,
-            amount: values.amount
-          }
-        }).then((res) => {
-          if(res && res.data.code == 0) {
-            this.setState({showAdd: false})
-            message.success('添加成功');
-          }
-        });
+        this.addReq('添加', values)
+      }
+    });
+  }
+  addReq(type, values) {
+    let data
+    // console.log(type)
+    if (type == '更新') {
+      data = {
+        amount: values.amount,
+        id: values.id
+      }
+    } else {
+      data = {
+        first_variety: this.state.type,
+        cid: this.props.info.id,
+        plant_variety: values.plant_variety,
+        amount: values.amount,
+      }
+    }
+    window.$http({
+      url: '/admin/company/editorCompanyInventory',
+      method: 'POST',
+      data: data
+    }).then((res) => {
+      if(res && res.data.code == 0) {
+        message.success(`${type}成功`);
+        if (type == '添加') {
+          this.setState({showAdd: false})
+          let data = this.props.woodDetail
+          data[this.state.type].push(res.data.data)
+          this.props.addSuccess(data)
+        }
       }
     });
   }
   // 表格中改变数量
   _changeValue = (e, record) => {
-    console.log(record);
-    console.log(e.target.value);
+    // console.log(record);
+    // console.log(e.target.value);
     let data = this.props.woodDetail
     data[this.state.type].map((item, index) => {
-      console.log(item);
-      console.log(record.id);
-      
+      // console.log(item);
+      // console.log(record.id);
       if (item.id == record.id) {
         data[this.state.type][index].amount = e.target.value
       }
@@ -91,7 +107,7 @@ class InventoryDetail extends Component {
         ) },
       { title: '更新时间', dataIndex: 'last_modify_time', key: 'last_modify_time' },
       {
-        title: '操作', dataIndex: '', key: '', render: () => <a href="javascript:;">更新</a>,
+        title: '操作', dataIndex: '', key: '', render: (text, record) => <a href="javascript:;" onClick={ () => { this.addReq('更新', record)}}>更新</a>,
       },
     ];
     const pagination = {
