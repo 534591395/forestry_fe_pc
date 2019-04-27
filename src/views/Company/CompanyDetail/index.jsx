@@ -94,7 +94,7 @@ class CompanyDetail extends Component {
   }
 
   render() {
-    const status = ['', '待审核', '已注册', '未通过', '已注销'];
+    const status = ['', '待审核', '已注册', '未通过', '已注销', '已停开'];
     const statusColor = ['', '#108ee9', '#87d068', '#f50', '#eee'];
 
     return (
