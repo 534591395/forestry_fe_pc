@@ -35,7 +35,7 @@ class CompanyInventory extends Component {
 
   getCompanyInfo = (companyType, name, status, store) => {
     window.$http({
-      url: '/admin/company/getCompanyList',
+      url: '/admin/company/getCompanyInventoryList',
       method: 'GET',
       params: {
         companyType: companyType === '全部' ? '' : companyType, 
