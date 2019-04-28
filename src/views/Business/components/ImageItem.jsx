@@ -107,6 +107,7 @@ class ImageItem extends Component {
         <div>
           <p>{ this.props.timeList && this.props.timeList[index] }</p>
           <p>{ this.props.timeList && this.props.locationList[index] }</p>
+          <p>{ this.props.carNumberList && this.props.carNumberList[index] }</p>
         </div>
         {/* </div> */}
  

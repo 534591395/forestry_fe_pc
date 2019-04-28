@@ -13,6 +13,7 @@ class PlantCert extends Component {
     images: [],
     timeList: [],
     locationList: [],
+    carNumberList: [],
     windowsList: [],
     info: {},
     showInfo: false,
@@ -66,6 +67,7 @@ class PlantCert extends Component {
         this.setState({images: record.picture_url ? record.picture_url.split(',') : []});
         this.setState({timeList: record.picture_time ? record.picture_time.split('@') : []});
         this.setState({locationList: record.picture_location ? record.picture_location.split(',') : []});
+        this.setState({carNumberList: record.car_number ? record.car_number.split(',') : []});
         this.setState({info: record})
         // this.setState({imageModal: true});
         this.setState({showInfo: true});
@@ -444,6 +446,7 @@ class PlantCert extends Component {
               images={ this.state.images } 
               timeList={ this.state.timeList } 
               locationList={ this.state.locationList } 
+              carNumberList={ this.state.carNumberList }
             />
              { (this.state.show_refuse_reason && status == 1 && this.state.images.length > 0) ? <Form.Item label="驳回原因: ">
               { getFieldDecorator('refuse_reason', {
