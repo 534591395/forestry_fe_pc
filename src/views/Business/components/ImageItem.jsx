@@ -76,26 +76,30 @@ class ImageItem extends Component {
 
         {/* <div style={{ marginTop: 15, marginBottom: 15, display: 'flex', flexWrap: 'wrap' }}> */}
         <div className="carousel-box">
-          <Carousel afterChange={e => this.onChange(e)} ref="Carousel" dots={false}>
-              {
-                this.props.images.map((item, index) => {
-                  return (
-                      <div key={ index }>
-                        <img 
-                          src={ item } 
-                          alt="" 
-                          style={{ height: 160, width: '100%', cursor: 'pointer'}}
-                          onClick={ () => { this.setImageModalData(item) } } 
-                        />
-                        {/* <div>
-                          <p>{ this.props.timeList && this.props.timeList[index] }</p>
-                          <p>{ this.props.timeList && this.props.locationList[index] }</p>
-                        </div> */}
-                      </div>
-                  )
-                })
-              }
-            </Carousel>
+            {
+              this.props.images.length ?
+                <Carousel afterChange={e => this.onChange(e)} ref="Carousel" dots={false}>
+                {
+                  this.props.images.map((item, index) => {
+                    return (
+                        <div key={ index }>
+                          <img 
+                            src={ item } 
+                            alt="" 
+                            style={{ height: 160, width: '100%', cursor: 'pointer'}}
+                            onClick={ () => { this.setImageModalData(item) } } 
+                          />
+                          {/* <div>
+                            <p>{ this.props.timeList && this.props.timeList[index] }</p>
+                            <p>{ this.props.timeList && this.props.locationList[index] }</p>
+                          </div> */}
+                        </div>
+                    )
+                  })
+                }
+                </Carousel> : ''
+            }
+
             {this.props.images.length> 1 ? 
               <div>
                   <div className="carousel-left"><Icon type="arrow-left" onClick={e => this.prev()}/></div>
