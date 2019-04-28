@@ -464,6 +464,7 @@ class PlantCert extends Component {
           visible={ this.state.imageModal } 
           maskClosable={ false }
           footer={ null }
+          destroyOnClose={true}
           onCancel={ () => { this.setState({imageModal: false}) } }
         >
           <ImageItem 
