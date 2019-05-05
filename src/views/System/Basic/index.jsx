@@ -27,7 +27,7 @@ class Basic extends Component {
       if(res && res.data.code == 0) {
         let data = Object.values(res.data.data);
         data.forEach((item) => {
-          item.info = item.info.join('，');
+          item.info = item.info.join(',');
         });
         this.setState({tableData: data});
       }
