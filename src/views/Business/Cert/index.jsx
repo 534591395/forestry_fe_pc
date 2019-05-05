@@ -314,6 +314,7 @@ class Cert extends Component {
               this.state.woods.map((item, index) => {
                 return (
                         <div className="detail-group" key={ index }>
+                          <div className="name">{ item.wood_variety == 'wood_variety_01' ? '原木类' : '非原木类' }</div>
                           <div className="name">{ item.plant_variety_txt }</div>
                           <Input size="small" value={ item.amount } type="number" disabled={record.status != 1} onChange ={value => this._changeValue(value, index)} />
                           <span>m³</span>
