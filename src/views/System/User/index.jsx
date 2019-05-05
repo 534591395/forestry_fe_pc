@@ -88,6 +88,9 @@ class User extends Component {
         for(let i in roleAry) {
           roleAry[i] = roleAry[i].id;
         }
+        this.setState({
+          currentUser: record
+        });
         this.props.form.setFields({role: {value: roleAry}});
         this.props.form.setFields({username: {value: record.username}});
         this.props.form.setFields({phone: {value: record.phone}});
