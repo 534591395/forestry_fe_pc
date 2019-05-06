@@ -4,6 +4,7 @@ import Role from './views/System/Role';
 import File from './views/System/File';
 import Basic from './views/System/Basic';
 import Version from './views/System/Version';
+import Plants from './views/System/Plants';
 import CompanyInfo from './views/Company/CompanyInfo';
 import CompanyDetail from './views/Company/CompanyDetail';
 import CompanyInventory from './views/Company/CompanyInventory';
@@ -14,7 +15,7 @@ import Check from './views/Inspect/Check';
 import Quarantine from './views/Inspect/Quarantine';
 
 export default {
-  Home, User, Role, File, Basic, Version,
+  Home, User, Role, File, Basic, Version,Plants,
   CompanyInfo, CompanyDetail, CompanyInventory, InventoryDetail, Cert, PlantCert,
   Check, Quarantine
 }

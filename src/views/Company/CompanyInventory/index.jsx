@@ -14,6 +14,7 @@ class CompanyInventory extends Component {
     info: {},
     plants: [],
     woods: [],
+    companyList: []
   }
 
   async componentDidMount() {
@@ -55,6 +56,7 @@ class CompanyInventory extends Component {
         this.setState({tableData: res.data.data.list});
         this.setState({plants: res.data.data.plants});
         this.setState({woods: res.data.data.woods});
+        this.setState({companyList: res.data.data.companyList});
       }
     });
   }
@@ -64,16 +66,17 @@ class CompanyInventory extends Component {
     this.getCompanyInfo(value.companyType, value.name ? value.name : '', value.status, value.store ? value.store : '');
   }
 
-  skipNewPath = (record) => {
-    this.setState({showDetail: true})
-    this.setState({woodDetail: record.woodDetail})
-    this.setState({info: record})
-    // this.props.history.push({
-    //   pathname: '/app/company/inventoryDetail',
-    //   search: window.$querystring.stringify({
-    //     id
-    //   })
-    // });
+  editor = (record, type) => {
+    if (type == 'editor') {
+      this.setState({showDetail: true})
+      this.setState({woodDetail: record.woodDetail})
+      this.setState({info: record})
+    } else 
+    if (type == 'add') {
+      this.setState({showDetail: true})
+      this.setState({woodDetail: {'first_variety_01': [], 'first_variety_02': []}})
+      this.setState({info: {}})
+    }
   }
   changeTableDate = (val) => {
     // console.log(val);
@@ -117,7 +120,7 @@ class CompanyInventory extends Component {
         width: 200,
         render: (text, record) => (
           <span>
-            <a href="javascript: void(0);" style={{ marginRight: '15px' }} onClick={ ($event) => { this.skipNewPath(record) } }>查看</a>
+            <a href="javascript: void(0);" style={{ marginRight: '15px' }} onClick={ ($event) => { this.editor(record, 'editor') } }>查看</a>
           </span>
         )
       }
@@ -187,6 +190,10 @@ class CompanyInventory extends Component {
             <Form.Item>
               <Button type="primary" onClick={ this.search }>搜索</Button>
             </Form.Item>
+
+            <Form.Item>
+              <Button type="primary" onClick={ ($event) => { this.editor(null, 'add') } }>新增企业库存</Button>
+            </Form.Item>
           </Form>
         </div>
 
@@ -198,7 +205,7 @@ class CompanyInventory extends Component {
           onCancel={() => this.setState({showDetail: false})}
           width={1000}
         >
-          <InventoryDetail woodDetail={ this.state.woodDetail } info={ this.state.info } plants={this.state.plants} woods={this.state.woods} changeTable={this.changeTableDate.bind(this)} addSuccess={this.addSuccess.bind(this)}></InventoryDetail>
+          <InventoryDetail woodDetail={ this.state.woodDetail } info={ this.state.info } plants={this.state.plants} woods={this.state.woods} changeTable={this.changeTableDate.bind(this)} addSuccess={this.addSuccess.bind(this)} companyList={this.state.companyList} ></InventoryDetail>
         </Modal>
       </div>
     )

@@ -12,7 +12,6 @@ class Router extends Component {
               Object.keys(routes).map((item) => {
                 const route = (r) => {
                   const Component = components[r.component];
-
                   return (
                     <Route exact key={ r.key }  path={ r.key } component={ Component } />
                   );

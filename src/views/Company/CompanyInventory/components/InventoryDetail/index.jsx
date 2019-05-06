@@ -9,6 +9,8 @@ class InventoryDetail extends Component {
     tableData: [],
     type: 'first_variety_01',
     showAdd: false,
+    // 新增的时候选择的企业
+    nowChoiceCompany: {}
   }
   // 原木类型选择
   callbackFn = (key) => {
@@ -17,7 +19,15 @@ class InventoryDetail extends Component {
   }
   // handleAdd = () => {
     
-  
+  // 选择当前企业
+  selCompanyChange = (value) => {
+    this.props.form.setFieldsValue({
+      nowChoiceCompany: value
+    })
+    this.setState({
+      nowChoiceCompany: JSON.parse(value)
+    });
+  }
   // 选择木材品种
   selChange = (value) => {
     this.props.form.setFieldsValue({
@@ -60,7 +70,7 @@ class InventoryDetail extends Component {
     } else {
       data = {
         first_variety: this.state.type,
-        cid: this.props.info.id,
+        cid: typeof this.props.info.id !== 'undefined' ? this.props.info.id :  this.state.nowChoiceCompany.id,
         plant_variety: values.plant_variety,
         amount: values.amount,
       }
@@ -98,6 +108,22 @@ class InventoryDetail extends Component {
     // this.props.setState({woodDetail: data})
     // record.address = 1
   }
+  
+  // 新增，弹出框
+  add = () => {
+    // 编辑
+    if (typeof this.props.info.id !== 'undefined') {
+      this.setState({showAdd: true})
+    } else {
+      // 新增
+      if (this.state.nowChoiceCompany.name) {
+        this.setState({showAdd: true})
+      } else {
+        this.props.form.validateFields();
+      }
+    }
+  }
+
   render() {
     const { getFieldDecorator } = this.props.form;
     const columns = [
@@ -119,10 +145,39 @@ class InventoryDetail extends Component {
     return (
       <div className="inventory-detail">
         <div className="info">
-          <div className="label">
-            <div>公司:{this.props.info.name}</div>
-            <div>信用代码:{ this.props.info.code }</div>
-          </div>
+          {
+            typeof this.props.info.id !== 'undefined'  ? 
+            <div className="label">
+              <div>公司:{this.props.info.name}</div>
+              <div>信用代码:{ this.props.info.code }</div>
+            </div> : 
+            <div className="label">
+              <div style={{height: '30px'}}> 
+                <Form layout="inline">
+                  <Form.Item label="公司: ">
+                      { getFieldDecorator('nowChoiceCompany', {
+                        rules: [{ required: true, message: '请选择企业' }]
+                      })(
+                        <Select
+                          showSearch
+                          style={{ width: 200 }}
+                          placeholder="请选择企业"
+                          optionFilterProp="children"
+                          onChange={this.selCompanyChange}
+                          onSearch={this.onSearch}
+                          filterOption={(input, option) => option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0}
+                        >
+                          {this.props.companyList.map ((item, index) => {
+                            return <Option value={JSON.stringify(item)} key={index}>{item.name}</Option>
+                          })}
+                        </Select>
+                      ) }
+                  </Form.Item>
+                </Form>
+              </div>
+              <div>信用代码:{ this.state.nowChoiceCompany.code }</div>
+            </div>
+          }
           <div className="num">
             <div>可用原木量: { this.props.info.firstVariety01Amount } m³</div>
             <div>可用板材量: { this.props.info.firstVariety02Amount } m³</div>
@@ -137,7 +192,7 @@ class InventoryDetail extends Component {
           </TabPane>
         </Tabs>
         <div className="content">
-          <Button onClick={ () => { this.setState({showAdd: true})} } type="primary" style={{ marginBottom: 16 }}>
+          <Button onClick={ () => { this.add() }} type="primary" style={{ marginBottom: 16 }}>
             新增
           </Button>
           <Table
@@ -163,7 +218,7 @@ class InventoryDetail extends Component {
                             <Select
                               showSearch
                               style={{ width: 200 }}
-                              placeholder="Select a person"
+                              placeholder="请选择木材品种"
                               optionFilterProp="children"
                               onChange={this.selChange}
                               onSearch={this.onSearch}

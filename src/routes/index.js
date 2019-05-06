@@ -37,6 +37,12 @@ export default {
         title: 'APP版本管理', 
         component: 'Version',
         showInMenu: true
+      },
+      {
+        key: 'app/system/plants',
+        title: '植物产品名称',
+        component: 'Plants',
+        showInMenu: true
       }
     ]
   },
