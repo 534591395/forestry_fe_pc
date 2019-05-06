@@ -45,7 +45,6 @@ class Plants extends Component {
         }).then((res) => {
           if(res && res.data.code == 0) {
             message.success(`${this.state.modalTitle}成功`);
-            this.toggleBasicModal();
             this.getBasicInfo(this.state.search);
           }
         });
