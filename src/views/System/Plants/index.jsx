@@ -18,18 +18,11 @@ class Plants extends Component {
 
   getBasicInfo(basicName) {
     window.$http({
-      url: '/admin/system/basic/getBasicInfo',
+      url: '/admin/system/plants/getPlantsList',
       method: 'GET',
-      params: {
-        basicName
-      }
     }).then((res) => {
       if(res && res.data.code == 0) {
-        let data = Object.values(res.data.data);
-        data.forEach((item) => {
-          item.info = item.info.join(',');
-        });
-        this.setState({tableData: data});
+        this.setState({tableData: res.data.data});
       }
     });
   }
@@ -39,38 +32,15 @@ class Plants extends Component {
     this.getBasicInfo(value);
   }
 
-  delBasic = ($event, id) => {
-    Modal.confirm({
-      title: '提示',
-      content: '是否删除此字典？（删除后可能导致app上基础资料无法显示）',
-      okType: 'danger',
-      onOk: () => {
-        window.$http({
-          url: '/admin/system/basic/delBasic',
-          method: 'DELETE',
-          data: {
-            id
-          }
-        }).then((res) => {
-          if(res && res.data.code == 0) {
-            message.success('删除字典成功');
-            this.getBasicInfo(this.state.search);
-          }
-        });
-      }
-    });
-  }
-
+  // 新增提交
   basicSubmit = () => {
     this.props.form.validateFields((err, values) => {
       if(!err) {
         window.$http({
-          url: `/admin/system/basic/${this.state.modalTitle == '新增字典' ? 'addBasic' : 'editBasic'}`,
-          method: this.state.modalTitle == '新增字典' ? 'PUT' : 'POST',
+          url: `/admin/system/plants/addPlants`,
+          method: 'POST',
           data: {
-            id: this.state.currentBasic.id,
-            basicName: values.name,
-            basicValue: values.info
+            param_name: values.param_name
           }
         }).then((res) => {
           if(res && res.data.code == 0) {
@@ -103,23 +73,23 @@ class Plants extends Component {
 
     const columns = [
       {
-        title: '字典名称',
-        dataIndex: 'name'
+        title: '植物产品名称',
+        dataIndex: 'param_name'
       },
       {
         title: '值',
-        dataIndex: 'info'
+        dataIndex: 'param_value'
       },
-      {
-        title: '操作',
-        width: 200,
-        render: (text, record) => (
-          <span>
-            <a href="javascript: void(0);" style={{ marginRight: '15px' }} onClick={ ($event) => { this.toggleBasicModal($event, '编辑字典', record) } }>编辑</a>
-            <a href="javascript: void(0);" onClick={ ($event) => { this.delBasic($event, record.id) } }>删除</a>
-          </span>
-        )
-      }
+      // {
+      //   title: '操作',
+      //   width: 200,
+      //   render: (text, record) => (
+      //     <span>
+      //       <a href="javascript: void(0);" style={{ marginRight: '15px' }} onClick={ ($event) => { this.toggleBasicModal($event, '编辑字典', record) } }>编辑</a>
+      //       <a href="javascript: void(0);" onClick={ ($event) => { this.delBasic($event, record.id) } }>删除</a>
+      //     </span>
+      //   )
+      // }
     ];
 
     const pagination = {
@@ -132,11 +102,11 @@ class Plants extends Component {
     return (
       <div className="basic">
         <div className="basic-header flex-space-between">
-          <Button type="primary" onClick={ ($event) => { this.toggleBasicModal($event, '新增字典') } }>新增字典</Button>
+          <Button type="primary" onClick={ ($event) => { this.toggleBasicModal($event, '新增植物产品') } }>新增植物产品</Button>
           
-          <div style={{ width: 300 }}>
-            <Input.Search placeholder="请输入字典名称" onSearch={ this.handleSearch } enterButton allowClear />
-          </div>
+          {/* <div style={{ width: 300 }}>
+            <Input.Search placeholder="请输入植物产品名称" onSearch={ this.handleSearch } enterButton allowClear />
+          </div> */}
         </div>
 
         <Table columns={ columns } dataSource={ this.state.tableData } pagination={ pagination } bordered rowKey={ record => record.id } />
@@ -144,18 +114,18 @@ class Plants extends Component {
         <Modal title={ this.state.modalTitle } visible={ this.state.basicModal } maskClosable={ false } destroyOnClose={ true }
         onOk={ this.basicSubmit } onCancel={ this.toggleBasicModal }>
           <Form>
-            <Form.Item label="字典名称" { ...formItemLayout } extra="修改字典名称可能导致app基础资料无法显示">
+            <Form.Item label="植物产品名称" { ...formItemLayout }>
               {
-                getFieldDecorator('name', {
+                getFieldDecorator('param_name', {
                   initialValue: this.state.currentBasic.name,
-                  rules: [{ required: true, message: '请输入字典名称' }]
+                  rules: [{ required: true, message: '请输入植物产品名称' }]
                 })(
-                  <Input placeholder="请输入字典名称" />
+                  <Input placeholder="请输入植物产品名称" />
                 )
               }  
             </Form.Item>
 
-            <Form.Item label="值" { ...formItemLayout } extra="请在不同的选项中间加英文逗号">
+            {/* <Form.Item label="值" { ...formItemLayout } extra="请在不同的选项中间加英文逗号">
               {
                 getFieldDecorator('info', {
                   initialValue: this.state.currentBasic.info,
@@ -164,7 +134,7 @@ class Plants extends Component {
                   <Input.TextArea  placeholder="请输入值" rows="3" />
                 )
               }  
-            </Form.Item>
+            </Form.Item> */}
           </Form>
         </Modal>
       </div>

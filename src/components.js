@@ -15,7 +15,7 @@ import Check from './views/Inspect/Check';
 import Quarantine from './views/Inspect/Quarantine';
 
 export default {
-  Home, User, Role, File, Basic, Version,Plants,
+  Home, User, Role, File, Basic, Version, Plants,
   CompanyInfo, CompanyDetail, CompanyInventory, InventoryDetail, Cert, PlantCert,
   Check, Quarantine
 }
