@@ -61,6 +61,11 @@ class CompanyInventory extends Component {
     });
   }
 
+  ok = () => {
+    this.setState({showDetail: false});
+    this.getCompanyInfo('','','','');
+  }
+
   search = () => {
     let value = this.props.form.getFieldsValue();
     this.getCompanyInfo(value.companyType, value.name ? value.name : '', value.status, value.store ? value.store : '');
@@ -201,8 +206,8 @@ class CompanyInventory extends Component {
         <Modal
           title="查看"
           visible={this.state.showDetail}
-          onOk={() => this.setState({showDetail: false})}
-          onCancel={() => this.setState({showDetail: false})}
+          onOk={() => this.ok()}
+          onCancel={() => this.ok()}
           width={1000}
         >
           <InventoryDetail woodDetail={ this.state.woodDetail } info={ this.state.info } plants={this.state.plants} woods={this.state.woods} changeTable={this.changeTableDate.bind(this)} addSuccess={this.addSuccess.bind(this)} companyList={this.state.companyList} ></InventoryDetail>
