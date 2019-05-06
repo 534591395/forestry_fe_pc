@@ -39,7 +39,7 @@ export default {
         showInMenu: true
       },
       {
-        key: 'app/system/plants',
+        key: '/app/system/plants',
         title: '植物产品名称',
         component: 'Plants',
         showInMenu: true
