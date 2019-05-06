@@ -21,7 +21,8 @@ class PlantCert extends Component {
     show_refuse_reason: false,
     first_variety_01: [], // 原木
     first_variety_02: [],
-    plants: {}
+    plants: {},
+    woods: {}
   }
 
   getPlantCertList = (data) => {
@@ -37,6 +38,7 @@ class PlantCert extends Component {
         this.setState({tableData: res.data.data.list});
         this.setState({windows: res.data.data.windows});
         this.setState({plants: res.data.data.plants});
+        this.setState({woods: res.data.data.woods});
       }
     });
   }
@@ -74,13 +76,14 @@ class PlantCert extends Component {
         let woodList = JSON.parse(record.wood_json).woodList
         let first_variety_01 = []
         let first_variety_02 = []
-        let plants = this.state.plants
+        let plants = this.state.plants;
+        let woods = this.state.woods;
         woodList.map(item => {
           if ( item.first_variety == 'first_variety_01') {
-            first_variety_01.push({plants: plants[item.plant_variety], amount: item.amount})
+            first_variety_01.push({plants: plants[item.plant_variety], amount: item.amount, woods: woods[item.wood_variety]})
           }
           if ( item.first_variety == 'first_variety_02') {
-            first_variety_02.push({plants: plants[item.plant_variety], amount: item.amount})
+            first_variety_02.push({plants: plants[item.plant_variety], amount: item.amount, woods: woods[item.wood_variety]})
           }
         })
         this.setState({first_variety_01: first_variety_01})
@@ -346,6 +349,7 @@ class PlantCert extends Component {
               <div className="title">非原木类</div>
               {this.state.first_variety_02.map((item, index) => {
                 return <div className="item" key={index}>
+                <div className="name">{item.woods}</div>
                 <div className="name">{item.plants}</div>
                 <div className="num">{item.amount}</div>
               </div>
