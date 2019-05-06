@@ -201,7 +201,7 @@ class CompanyInventory extends Component {
         <Modal
           title="查看"
           visible={this.state.showDetail}
-          onOk={this.handleOk}
+          onOk={() => this.setState({showDetail: false})}
           onCancel={() => this.setState({showDetail: false})}
           width={1000}
         >
