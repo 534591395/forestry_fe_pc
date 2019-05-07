@@ -256,6 +256,10 @@ class PlantCert extends Component {
         dataIndex: 'report_number'
       },
       {
+        title: '创建时间',
+        dataIndex: 'create_time'
+      },
+      {
         title: '状态',
         render: (text, record) => (
           <span>
