@@ -10,7 +10,11 @@ class InventoryDetail extends Component {
     type: 'first_variety_01',
     showAdd: false,
     // 新增的时候选择的企业
-    nowChoiceCompany: {}
+    nowChoiceCompany: {
+      woodDetail: {'first_variety_01': [], 'first_variety_02': []},
+      firstVariety01Amount: 0,
+      firstVariety02Amount: 0
+    }
   }
   // 原木类型选择
   callbackFn = (key) => {
@@ -24,8 +28,39 @@ class InventoryDetail extends Component {
     this.props.form.setFieldsValue({
       nowChoiceCompany: value
     })
+    let val = JSON.parse(value);
+    if (!val.woodDetail) {
+      val.woodDetail = {'first_variety_01': [], 'first_variety_02': []};
+      val.firstVariety01Amount = 0;
+      val.firstVariety02Amount = 0;
+    }
     this.setState({
-      nowChoiceCompany: JSON.parse(value)
+      nowChoiceCompany: val
+    }, () => {
+      if (this.state.nowChoiceCompany.name) {
+        window.$http({
+          url: '/admin/company/getCompanyInventoryById',
+          method: 'GET',
+          params: {
+            id: this.state.nowChoiceCompany.id
+          }
+        }).then((res) => {
+          if(res && res.data.code == 0) {
+            let nowChoiceCompany = this.state.nowChoiceCompany;
+            nowChoiceCompany.woodDetail = res.data.data.info.woodDetail || {'first_variety_01': [], 'first_variety_02': []};
+            if (typeof res.data.data.info.firstVariety01Amount !== 'undefined') {
+              nowChoiceCompany.firstVariety01Amount = res.data.data.info.firstVariety01Amount; 
+            }
+            if (typeof res.data.data.info.firstVariety02Amount !== 'undefined') {
+              nowChoiceCompany.firstVariety02Amount = res.data.data.info.firstVariety02Amount;
+            }
+            
+            this.setState({
+              nowChoiceCompany: nowChoiceCompany
+            });
+          }
+        });
+      }
     });
   }
   // 选择木材品种
@@ -49,11 +84,7 @@ class InventoryDetail extends Component {
   }
   // 添加
   addOk = () => {
-    // if (this.state.type === 'firstVariety02') {
-    //   data.wood_variety = this.state.addWoodsValue
-    // }
     this.props.form.validateFields((err, values) => {
-      // console.log(values);
       if (!err) {
         this.addReq('添加', values)
       }
@@ -83,30 +114,88 @@ class InventoryDetail extends Component {
       if(res && res.data.code == 0) {
         message.success(`${type}成功`);
         if (type == '添加') {
-          this.setState({showAdd: false})
-          let data = this.props.woodDetail
-          data[this.state.type].push(res.data.data)
-          this.props.addSuccess(data)
+          this.setState({showAdd: false});
+          let data;
+          if (typeof this.props.info.id !== 'undefined') {
+            data = this.props.woodDetail;
+            if (res.data.data.type == 'add') {
+              data[this.state.type].push(res.data.data);
+            }
+          } else {
+            let nowChoiceCompany = this.state.nowChoiceCompany;
+            data = nowChoiceCompany.woodDetail;
+            if (res.data.data.type == 'add') {
+              data[this.state.type].push(res.data.data);
+            }
+            this.setState({
+              nowChoiceCompany: nowChoiceCompany
+            });
+          }
+          this.props.addSuccess(data);
+        }
+        this.getRecord();
+      }
+    });
+  }
+
+  // 重新拉取数据更新记录
+  getRecord = () => {
+    window.$http({
+      url: '/admin/company/getCompanyInventoryById',
+      method: 'GET',
+      params: {
+        id: typeof this.props.info.id !== 'undefined' ? this.props.info.id :  this.state.nowChoiceCompany.id
+      }
+    }).then((res) => {
+      if(res && res.data.code == 0) {
+        if (typeof this.props.info.id !== 'undefined') {
+          if (typeof res.data.data.info.firstVariety01Amount !== 'undefined') {
+            this.props.info.firstVariety01Amount  = res.data.data.info.firstVariety01Amount; 
+          } 
+          if (typeof res.data.data.info.firstVariety02Amount !== 'undefined') {
+            this.props.info.firstVariety02Amount  = res.data.data.info.firstVariety02Amount; 
+          }
+          this.props.setWoodDetail(res.data.data.info.woodDetail); 
+        } else {
+          let nowChoiceCompany = this.state.nowChoiceCompany;
+          nowChoiceCompany.woodDetail = res.data.data.info.woodDetail || {'first_variety_01': [], 'first_variety_02': []};
+          if (typeof res.data.data.info.firstVariety01Amount !== 'undefined') {
+            nowChoiceCompany.firstVariety01Amount = res.data.data.info.firstVariety01Amount; 
+          }
+          if (typeof res.data.data.info.firstVariety02Amount !== 'undefined') {
+            nowChoiceCompany.firstVariety02Amount = res.data.data.info.firstVariety02Amount;
+          }
+          this.setState({
+            nowChoiceCompany: nowChoiceCompany
+          });
         }
       }
     });
   }
+
   // 表格中改变数量
   _changeValue = (e, record) => {
-    // console.log(record);
-    // console.log(e.target.value);
-    let data = this.props.woodDetail
-    data[this.state.type].map((item, index) => {
-      // console.log(item);
-      // console.log(record.id);
-      if (item.id == record.id) {
-        data[this.state.type][index].amount = e.target.value
-      }
-    })
-    // console.log(data)
-    this.props.changeTable(data)
-    // this.props.setState({woodDetail: data})
-    // record.address = 1
+    let data ;
+    if (typeof this.props.info.id !== 'undefined') {
+      data = this.props.woodDetail;
+      data[this.state.type].map((item, index) => {
+        if (item.id == record.id) {
+          data[this.state.type][index].amount = e.target.value
+        }
+      })
+      this.props.changeTable(data);
+    } else {
+      let nowChoiceCompany = this.state.nowChoiceCompany;
+      data = nowChoiceCompany.woodDetail;
+      data[this.state.type].map((item, index) => {
+        if (item.id == record.id) {
+          data[this.state.type][index].amount = e.target.value
+        }
+      });
+      this.setState({
+        nowChoiceCompany: nowChoiceCompany
+      });
+    }
   }
   
   // 新增，弹出框
@@ -142,6 +231,14 @@ class InventoryDetail extends Component {
       showSizeChanger: true,
       showTotal: (total) => (`总共 ${total} 条`)
     }
+
+    let dataArr;
+    if (typeof this.props.info.id !== 'undefined') {
+      dataArr = this.props.woodDetail[this.state.type];
+    } else {
+      dataArr = this.state.nowChoiceCompany.woodDetail[this.state.type];
+    }
+    
     return (
       <div className="inventory-detail">
         <div className="info">
@@ -178,10 +275,18 @@ class InventoryDetail extends Component {
               <div>信用代码:{ this.state.nowChoiceCompany.code }</div>
             </div>
           }
-          <div className="num">
-            <div>可用原木量: { this.props.info.firstVariety01Amount } m³</div>
-            <div>可用板材量: { this.props.info.firstVariety02Amount } m³</div>
-          </div>
+          {
+            typeof this.props.info.id !== 'undefined'  ? 
+            <div className="num">
+              <div>可用原木量: { this.props.info.firstVariety01Amount } m³</div>
+              <div>可用板材量: { this.props.info.firstVariety02Amount } m³</div>
+            </div> :
+            <div className="num">
+              <div>可用原木量: { this.state.nowChoiceCompany.firstVariety01Amount } m³</div>
+              <div>可用板材量: { this.state.nowChoiceCompany.firstVariety02Amount } m³</div>
+            </div>
+          }
+
         </div>
         <Tabs defaultActiveKey="first_variety_01" onChange={ this.callbackFn }>
           <TabPane tab="原木类" key="first_variety_01">
@@ -198,7 +303,7 @@ class InventoryDetail extends Component {
           <Table
             bordered
             columns={columns}
-            dataSource={ this.props.woodDetail[this.state.type] }
+            dataSource={ dataArr }
             pagination={ pagination }
           />
         </div>
@@ -230,26 +335,6 @@ class InventoryDetail extends Component {
                             </Select>
                           ) }
             </Form.Item>
-            {/* {this.state.type === 'firstVariety02' ? <Form.Item>
-                          { getFieldDecorator('woods', {
-                            rules: [{ required: true, message: '请选择木材品种' }]
-                          })(
-                            <Select
-                              showSearch
-                              style={{ width: 200 }}
-                              placeholder="Select a person"
-                              optionFilterProp="children"
-                              onChange={this.selWoodsChange}
-                              onSearch={this.onSearch}
-                              value={this.state.addValue}
-                              filterOption={(input, option) => option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0}
-                            >
-                              {this.props.woods.map (item => {
-                                return <Option value={item.key}>{item.value}</Option>
-                              })}
-                            </Select>
-                          ) }
-            </Form.Item> : null} */}
             <Form.Item label="开证量: ">
                           { getFieldDecorator('amount', {
                             rules: [{ required: true, message: '请填写开证量' }]
