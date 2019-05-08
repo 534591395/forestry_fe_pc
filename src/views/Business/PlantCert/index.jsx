@@ -261,8 +261,12 @@ class PlantCert extends Component {
       },
       {
         title: '创建日期',
-        dataIndex: 'date_time'
+        dataIndex: 'create_time'
       },
+      // {
+      //   title: '创建日期',
+      //   dataIndex: 'date_time'
+      // },
       {
         title: '企业名称',
         dataIndex: 'name'
@@ -324,10 +328,6 @@ class PlantCert extends Component {
       //   title: '相对应的报检单号',
       //   dataIndex: 'report_number'
       // },
-      {
-        title: '创建时间',
-        dataIndex: 'create_time'
-      },
       {
         title: '状态',
         render: (text, record) => (
