@@ -24,7 +24,7 @@ class PlantCert extends Component {
     plants: {},
     woods: {}
   }
-
+  // 获取运输证列表
   getPlantCertList = (data) => {
     window.$http({
       url: `/admin/business/getPlantCertList`,
@@ -35,10 +35,29 @@ class PlantCert extends Component {
       }
     }).then((res) => {
       if (res && res.data.code === 0) {
-        this.setState({tableData: res.data.data.list});
         this.setState({windows: res.data.data.windows});
         this.setState({plants: res.data.data.plants});
         this.setState({woods: res.data.data.woods});
+        
+        let list = res.data.data.list
+        list.map(item => {
+          let woodList = JSON.parse(item.wood_json).woodList
+          let first_variety_01 = []
+          let first_variety_02 = []
+          let plants = this.state.plants;
+          let woods = this.state.woods;
+          woodList.map(innerItem => {
+            if ( innerItem.first_variety == 'first_variety_01') {
+              first_variety_01.push({plants: plants[innerItem.plant_variety], amount: innerItem.amount, woods: woods[innerItem.wood_variety]})
+            }
+            if ( innerItem.first_variety == 'first_variety_02') {
+              first_variety_02.push({plants: plants[innerItem.plant_variety], amount: innerItem.amount, woods: woods[innerItem.wood_variety]})
+            }
+          })
+          item.first_variety_01 = first_variety_01
+          item.first_variety_02 = first_variety_02
+        })
+        this.setState({tableData: list});
       }
     });
   }
@@ -73,6 +92,7 @@ class PlantCert extends Component {
         this.setState({info: record})
         // this.setState({imageModal: true});
         this.setState({showInfo: true});
+        // 遍历木材品种
         let woodList = JSON.parse(record.wood_json).woodList
         let first_variety_01 = []
         let first_variety_02 = []
@@ -236,25 +256,68 @@ class PlantCert extends Component {
         fixed: 'left'
       },
       {
+        title: '创建日期',
+        dataIndex: 'date_time'
+      },
+      {
         title: '企业名称',
         dataIndex: 'name'
       },
       {
-        title: '日期',
-        dataIndex: 'date_time'
+        title: '目的地',
+        dataIndex: 'receive_address'
       },
       {
-        title: '申请人',
-        dataIndex: 'apply_person'
+        title: '收货单位（个人）',
+        dataIndex: 'receive_person'
       },
       {
-        title: '承运人',
-        dataIndex: 'transport_person'
+        title: '木材品种',
+        render: (text, record) => (
+          <div className="info table-info">
+            {
+              record.first_variety_01.length > 0 ? <div className="content">
+              <div className="title">原木类</div>
+                {record.first_variety_01.map((item, index) => {
+                  return <div className="item" key={index}>
+                  <div className="name">{item.plants}</div>
+                  <div className="num">{item.amount}</div>
+                </div>
+                })}
+              </div> : null
+            }
+            {
+              record.first_variety_02.length > 0 ? <div className="content">
+              <div className="title">非原木类</div>
+                {record.first_variety_02.map((item, index) => {
+                  return <div className="item" key={index}>
+                  <div className="name">{item.woods}</div>
+                  <div className="name">{item.plants}</div>
+                  <div className="num">{item.amount}</div>
+                </div>
+                })}
+              </div> : null
+            }
+            
+          </div>
+        )
       },
       {
-        title: '相对应的报检单号',
-        dataIndex: 'report_number'
+        title: '车牌号',
+        dataIndex: 'car_number'
       },
+      // {
+      //   title: '申请人',
+      //   dataIndex: 'apply_person'
+      // },
+      // {
+      //   title: '承运人',
+      //   dataIndex: 'transport_person'
+      // },
+      // {
+      //   title: '相对应的报检单号',
+      //   dataIndex: 'report_number'
+      // },
       {
         title: '状态',
         render: (text, record) => (
