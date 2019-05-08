@@ -69,7 +69,7 @@ class SearchHeader extends Component {
                   <Select.Option value={ 1 }>待审核</Select.Option>
                   <Select.Option value={ 2 }>已通过</Select.Option>
                   <Select.Option value={ 3 }>未通过</Select.Option>
-                  <Select.Option value={ 5 }>待上传照片</Select.Option>
+                  <Select.Option value={ 4 }>待上传照片</Select.Option>
                 </Select>
               )
             }
