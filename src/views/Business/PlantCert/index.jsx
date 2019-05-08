@@ -78,12 +78,14 @@ class PlantCert extends Component {
         let first_variety_02 = []
         let plants = this.state.plants;
         let woods = this.state.woods;
-        woodList.map(item => {
+        let producing_areaArr = record.producing_area.split(',');
+        woodList.map((item, index) => {
+          item.producing_area = producing_areaArr[index];
           if ( item.first_variety == 'first_variety_01') {
-            first_variety_01.push({plants: plants[item.plant_variety], amount: item.amount, woods: woods[item.wood_variety]})
+            first_variety_01.push({plants: plants[item.plant_variety], amount: item.amount, woods: woods[item.wood_variety], producing_area: item.producing_area})
           }
           if ( item.first_variety == 'first_variety_02') {
-            first_variety_02.push({plants: plants[item.plant_variety], amount: item.amount, woods: woods[item.wood_variety]})
+            first_variety_02.push({plants: plants[item.plant_variety], amount: item.amount, woods: woods[item.wood_variety], producing_area: item.producing_area})
           }
         })
         this.setState({first_variety_01: first_variety_01})
@@ -344,6 +346,7 @@ class PlantCert extends Component {
               <div className="title">原木类</div>
               {this.state.first_variety_01.map((item, index) => {
                 return <div className="item" key={index}>
+                <div className="name">{item.producing_area}</div>
                 <div className="name">{item.plants}</div>
                 <div className="num">{item.amount}</div>
               </div>
@@ -353,6 +356,7 @@ class PlantCert extends Component {
               <div className="title">非原木类</div>
               {this.state.first_variety_02.map((item, index) => {
                 return <div className="item" key={index}>
+                <div className="name">{item.producing_area}</div>
                 <div className="name">{item.woods}</div>
                 <div className="name">{item.plants}</div>
                 <div className="num">{item.amount}</div>
