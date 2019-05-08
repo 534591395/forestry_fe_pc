@@ -39,6 +39,7 @@ class PlantCert extends Component {
         this.setState({plants: res.data.data.plants});
         this.setState({woods: res.data.data.woods});
         
+        // 遍历木材品种
         let list = res.data.data.list
         list.map(item => {
           let woodList = JSON.parse(item.wood_json).woodList
@@ -92,7 +93,6 @@ class PlantCert extends Component {
         this.setState({info: record})
         // this.setState({imageModal: true});
         this.setState({showInfo: true});
-        // 遍历木材品种
         let woodList = JSON.parse(record.wood_json).woodList
         let first_variety_01 = []
         let first_variety_02 = []
