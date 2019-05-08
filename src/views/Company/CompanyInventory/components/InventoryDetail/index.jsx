@@ -118,11 +118,15 @@ class InventoryDetail extends Component {
           let data;
           if (typeof this.props.info.id !== 'undefined') {
             data = this.props.woodDetail;
-            data[this.state.type].push(res.data.data);
+            if (res.data.data.type == 'add') {
+              data[this.state.type].push(res.data.data);
+            }
           } else {
             let nowChoiceCompany = this.state.nowChoiceCompany;
             data = nowChoiceCompany.woodDetail;
-            data[this.state.type].push(res.data.data);
+            if (res.data.data.type == 'add') {
+              data[this.state.type].push(res.data.data);
+            }
             this.setState({
               nowChoiceCompany: nowChoiceCompany
             });
@@ -150,7 +154,8 @@ class InventoryDetail extends Component {
           } 
           if (typeof res.data.data.info.firstVariety02Amount !== 'undefined') {
             this.props.info.firstVariety02Amount  = res.data.data.info.firstVariety02Amount; 
-          }         
+          }
+          this.props.setWoodDetail(res.data.data.info.woodDetail); 
         } else {
           let nowChoiceCompany = this.state.nowChoiceCompany;
           nowChoiceCompany.woodDetail = res.data.data.info.woodDetail || {'first_variety_01': [], 'first_variety_02': []};
@@ -160,7 +165,6 @@ class InventoryDetail extends Component {
           if (typeof res.data.data.info.firstVariety02Amount !== 'undefined') {
             nowChoiceCompany.firstVariety02Amount = res.data.data.info.firstVariety02Amount;
           }
-          
           this.setState({
             nowChoiceCompany: nowChoiceCompany
           });

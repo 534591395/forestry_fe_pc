@@ -41,6 +41,12 @@ class CompanyInventory extends Component {
     });
   }
 
+  setWoodDetail = (woodDetail) => {
+    this.setState({
+      woodDetail: woodDetail
+    });
+  }
+
   getCompanyInfo = (companyType, name, status, store) => {
     window.$http({
       url: '/admin/company/getCompanyInventoryList',
@@ -210,7 +216,7 @@ class CompanyInventory extends Component {
           onCancel={() => this.ok()}
           width={1000}
         >
-          <InventoryDetail woodDetail={ this.state.woodDetail } info={ this.state.info } plants={this.state.plants} woods={this.state.woods} changeTable={this.changeTableDate.bind(this)} addSuccess={this.addSuccess.bind(this)} companyList={this.state.companyList} ></InventoryDetail>
+          <InventoryDetail woodDetail={ this.state.woodDetail } info={ this.state.info } plants={this.state.plants} woods={this.state.woods} changeTable={this.changeTableDate.bind(this)} addSuccess={this.addSuccess.bind(this)} companyList={this.state.companyList} setWoodDetail={this.setWoodDetail.bind(this)} ></InventoryDetail>
         </Modal>
       </div>
     )
