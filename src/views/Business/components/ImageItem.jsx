@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Modal, Carousel, Icon, Button } from 'antd';
 
+import './index.less';
+
 
 class ImageItem extends Component {
   static propTypes = {
@@ -77,37 +79,52 @@ class ImageItem extends Component {
         {/* <div style={{ marginTop: 15, marginBottom: 15, display: 'flex', flexWrap: 'wrap' }}> */}
         <div className="carousel-box">
             {
-              this.props.images.length ?
-                <Carousel afterChange={e => this.onChange(e)} ref="Carousel" dots={false}>
-                {
-                  this.props.images.map((item, index) => {
-                    return (
-                        <div key={ index }>
-                          <img 
-                            src={ item } 
-                            alt="" 
-                            style={{ height: 160, width: '100%', cursor: 'pointer'}}
-                            onClick={ () => { this.setImageModalData(item) } } 
-                          />
-                          {/* <div>
-                            <p>{ this.props.timeList && this.props.timeList[index] }</p>
-                            <p>{ this.props.timeList && this.props.locationList[index] }</p>
-                          </div> */}
-                        </div>
-                    )
-                  })
-                }
-                </Carousel> : ''
+              // this.props.images.length ?
+              //   <Carousel afterChange={e => this.onChange(e)} ref="Carousel" dots={false}>
+              //   {
+              //     this.props.images.map((item, index) => {
+              //       return (
+              //           <div key={ index }>
+              //             <img 
+              //               src={ item } 
+              //               alt="" 
+              //               style={{ height: 160, width: '100%', cursor: 'pointer'}}
+              //               onClick={ () => { this.setImageModalData(item) } } 
+              //             />
+              //             {/* <div>
+              //               <p>{ this.props.timeList && this.props.timeList[index] }</p>
+              //               <p>{ this.props.timeList && this.props.locationList[index] }</p>
+              //             </div> */}
+              //           </div>
+              //       )
+              //     })
+              //   }
+              //   </Carousel> : ''
             }
 
-            {this.props.images.length> 1 ? 
+            {/* {this.props.images.length> 1 ? 
               <div>
                   <div className="carousel-left"><Icon type="arrow-left" onClick={e => this.prev()}/></div>
                   <div className="carousel-right"><Icon type="arrow-right" onClick={e=> this.next()}/></div>
                   <div className="carousel-num">{index+1}/{this.props.images.length}</div>
               </div> : ""
-            }
+            } */}
         </div> 
+        {
+          this.props.images.length ? <div className="img-box-h">
+          {
+              this.props.images.map((item, index) => {
+                return (
+                  <img key={ index }
+                  src={ item } 
+                  alt="" 
+                  style={{ height: 160, cursor: 'pointer', marginRight: '10px' }}
+                  onClick={ () => { this.setImageModalData(item) } } 
+                />
+                )
+              })}
+          </div> : null
+        }   
         <div>
           <p>{ this.props.timeList && this.props.timeList[index] }</p>
           <p>{ this.props.timeList && this.props.locationList[index] }</p>
