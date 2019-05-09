@@ -47,12 +47,14 @@ class PlantCert extends Component {
           let first_variety_02 = []
           let plants = this.state.plants;
           let woods = this.state.woods;
-          woodList.map(innerItem => {
+          let producing_areaArr = item.producing_area.split(',');
+          woodList.map( (innerItem, index) => {
+            innerItem.producing_area = producing_areaArr[index];
             if ( innerItem.first_variety == 'first_variety_01') {
-              first_variety_01.push({plants: plants[innerItem.plant_variety], amount: innerItem.amount, woods: woods[innerItem.wood_variety]})
+              first_variety_01.push({plants: plants[innerItem.plant_variety], amount: innerItem.amount, woods: woods[innerItem.wood_variety], producing_area: innerItem.producing_area})
             }
             if ( innerItem.first_variety == 'first_variety_02') {
-              first_variety_02.push({plants: plants[innerItem.plant_variety], amount: innerItem.amount, woods: woods[innerItem.wood_variety]})
+              first_variety_02.push({plants: plants[innerItem.plant_variety], amount: innerItem.amount, woods: woods[innerItem.wood_variety], producing_area: innerItem.producing_area})
             }
           })
           item.first_variety_01 = first_variety_01
@@ -259,8 +261,12 @@ class PlantCert extends Component {
       },
       {
         title: '创建日期',
-        dataIndex: 'date_time'
+        dataIndex: 'create_time'
       },
+      // {
+      //   title: '创建日期',
+      //   dataIndex: 'date_time'
+      // },
       {
         title: '企业名称',
         dataIndex: 'name'
@@ -282,6 +288,7 @@ class PlantCert extends Component {
               <div className="title">原木类</div>
                 {record.first_variety_01.map((item, index) => {
                   return <div className="item" key={index}>
+                  <div className="name">{item.producing_area}</div>
                   <div className="name">{item.plants}</div>
                   <div className="num">{item.amount}</div>
                 </div>
@@ -293,6 +300,7 @@ class PlantCert extends Component {
               <div className="title">非原木类</div>
                 {record.first_variety_02.map((item, index) => {
                   return <div className="item" key={index}>
+                  <div className="name">{item.producing_area}</div>
                   <div className="name">{item.woods}</div>
                   <div className="name">{item.plants}</div>
                   <div className="num">{item.amount}</div>
@@ -320,10 +328,6 @@ class PlantCert extends Component {
       //   title: '相对应的报检单号',
       //   dataIndex: 'report_number'
       // },
-      {
-        title: '创建时间',
-        dataIndex: 'create_time'
-      },
       {
         title: '状态',
         render: (text, record) => (
