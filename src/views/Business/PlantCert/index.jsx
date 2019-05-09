@@ -22,7 +22,11 @@ class PlantCert extends Component {
     first_variety_01: [], // 原木
     first_variety_02: [],
     plants: {},
-    woods: {}
+    woods: {},
+    employeeList: [],
+    showEmployeeModel: false,
+    nowRecord: null,
+    selectEmployeeId: null
   }
   // 获取运输证列表
   getPlantCertList = (data) => {
@@ -61,6 +65,58 @@ class PlantCert extends Component {
           item.first_variety_02 = first_variety_02
         })
         this.setState({tableData: list});
+      }
+    });
+  }
+
+  // 获取业务员列表（纯粹的业务员角色）
+  getEmployeeList = () => {
+    window.$http({
+      url: `/admin/system/user/getEmployeeList`,
+      method: 'GET'
+    }).then((res) => {
+      if (res && res.data.code === 0) {
+        this.setState({
+          employeeList: res.data.data
+        });
+      }
+    });
+  }
+
+  // 分派给业务员
+  setToEmployee = (title, record) => {
+    this.getEmployeeList();
+    this.setState({
+      showEmployeeModel: true,
+      nowRecord: record
+    });
+  }
+  // 选择业务员
+  selectEmployee = (value)  =>{
+    this.setState({
+      selectEmployeeId: value
+    });
+
+  }
+  // 业务员设置下去 
+  setEmployee = () => {
+    window.$http({
+      url: `/admin/business/setEmployee`,
+      method: 'PUT',
+      data: {
+        id: this.state.nowRecord.id,
+        employeeId: this.state.selectEmployeeId
+      }
+    }).then((res) => {
+      if(res && res.data.code == 0) {
+        message.success('分派成功');
+        this.setState({
+          showEmployeeModel: false,
+          nowRecord: null,
+          selectEmployeeId: null
+        });
+      } else {
+        message.success('分派失败');
       }
     });
   }
@@ -232,18 +288,18 @@ class PlantCert extends Component {
       }
     });
   }
-  // // 第二次驳回
-  // imgHandleCancel = () => {
-  //   if (!this.state.show_refuse_reason) {
-  //     this.setState({show_refuse_reason: true});
-  //     return
-  //   }
-  //   this.props.form.validateFields((err, values) => {
-  //     if (!err) {
-  //       this.operateRecord('驳回', this.state.info, values.refuse_reason)
-  //     }
-  //   });
-  // }
+
+  // 返回当前登录用户角色 ,id=3 表示业务员
+  getRole() {
+    let roleArr = [];
+    const user = window.$session.get('user') || {};
+    if (user.role) {
+      user.role.map(item => {
+        roleArr.push(item.id);
+      });
+    }
+    return roleArr;
+  }
   render() {
     let info = this.state.info;
     let status = this.state.info.status;
@@ -263,10 +319,6 @@ class PlantCert extends Component {
         title: '创建日期',
         dataIndex: 'create_time'
       },
-      // {
-      //   title: '创建日期',
-      //   dataIndex: 'date_time'
-      // },
       {
         title: '企业名称',
         dataIndex: 'name'
@@ -316,18 +368,6 @@ class PlantCert extends Component {
         title: '车牌号',
         dataIndex: 'car_number'
       },
-      // {
-      //   title: '申请人',
-      //   dataIndex: 'apply_person'
-      // },
-      // {
-      //   title: '承运人',
-      //   dataIndex: 'transport_person'
-      // },
-      // {
-      //   title: '相对应的报检单号',
-      //   dataIndex: 'report_number'
-      // },
       {
         title: '状态',
         render: (text, record) => (
@@ -343,29 +383,17 @@ class PlantCert extends Component {
         fixed: 'right',
         width: 150,
         render: (text, record) => (
-          // <span>
-          //    <a 
-          //           key={ index }
-          //           style={{ marginLeft: 10 }} 
-          //           onClick={ 
-          //             () => { this.operateRecord(item, record) } 
-          //           }
-          //         >
-          //           { item }
-          //         </a>
-          //   <a style={{ marginLeft: 10 }}>
-          //     <select onChange={(e) => this.settingWindows(e, record)}>
-          //       {
-          //         this.state.windowsList.map( (item, key) => {
-          //           // <option value={item.value} key={key}>{item.name}</option>
-          //         })
-          //       }
-          //     </select>
-          //   </a>
-          // </span>
-          <span>
-            <a href="javascript: void(0);" style={{ marginRight: '15px' }} onClick={ ($event) => { this.operateRecord('查看', record) } }>查看</a>
-          </span>
+          <div>
+            <span>
+              <a href="javascript: void(0);" style={{ marginRight: '15px' }} onClick={ ($event) => { this.operateRecord('查看', record) } }>查看</a>
+            </span>
+            <span>
+              {
+                this.getRole().indexOf(1)  > -1 || this.getRole().indexOf(2)  > -1 ? 
+                <a href="javascript: void(0);" style={{ marginRight: '15px' }} onClick={ ($event) => { this.setToEmployee('分派到业务员', record) } }>分派</a> : ''
+              }
+            </span>
+          </div>
         )
       }
     ];
@@ -390,6 +418,28 @@ class PlantCert extends Component {
           bordered 
           rowKey={ record => record.number }
         />
+
+        <Modal
+          title="分派业务员"
+          visible={ this.state.showEmployeeModel }
+          maskClosable={ false }
+          onCancel={ () => { this.setState({showEmployeeModel: false}) } }
+          onOk={ () => { this.setEmployee() } }
+          >
+            <Select
+              showSearch
+              style={{ width: 200 }}
+              placeholder="选择业务员"
+              onChange={ value=> { this.selectEmployee(value) } }
+              optionFilterProp="children"
+              filterOption={(input, option) => option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0}
+            >
+              {this.state.employeeList.map ((item, index) => {
+                return <Option value={item.id} key={index}>{item.username}</Option>
+              })}
+            </Select>  
+          
+          </Modal>
 
         <Modal 
           title="查看" 
