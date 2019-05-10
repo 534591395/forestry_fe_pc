@@ -88,7 +88,8 @@ class PlantCert extends Component {
     this.getEmployeeList();
     this.setState({
       showEmployeeModel: true,
-      nowRecord: record
+      nowRecord: record,
+      selectEmployeeId: record.operator_id || null
     });
   }
   // 选择业务员
@@ -110,13 +111,18 @@ class PlantCert extends Component {
     }).then((res) => {
       if(res && res.data.code == 0) {
         message.success('分派成功');
+        let tableData = this.state.tableData || [];
+        tableData.map(item => {
+          if (item.id === this.state.nowRecord.id) {
+            item.operator_id = this.state.selectEmployeeId
+          }
+        });
         this.setState({
+          tableData: tableData,
           showEmployeeModel: false,
           nowRecord: null,
           selectEmployeeId: null
         });
-      } else {
-        message.success('分派失败');
       }
     });
   }
@@ -390,7 +396,7 @@ class PlantCert extends Component {
             <span>
               {
                 this.getRole().indexOf(1)  > -1 || this.getRole().indexOf(2)  > -1 ? 
-                <a href="javascript: void(0);" style={{ marginRight: '15px' }} onClick={ ($event) => { this.setToEmployee('分派到业务员', record) } }>分派</a> : ''
+                <a href="javascript: void(0);" style={{ marginRight: '15px' }} onClick={ ($event) => { this.setToEmployee('分派到业务员', record) } }>{ typeof record.operator_id !== 'undefined' && record.operator_id != "" && record.operator_id !== null ? '已分派': '分派'}</a> : ''
               }
             </span>
           </div>
@@ -421,6 +427,7 @@ class PlantCert extends Component {
 
         <Modal
           title="分派业务员"
+          destroyOnClose={true}
           visible={ this.state.showEmployeeModel }
           maskClosable={ false }
           onCancel={ () => { this.setState({showEmployeeModel: false}) } }
@@ -430,6 +437,7 @@ class PlantCert extends Component {
               showSearch
               style={{ width: 200 }}
               placeholder="选择业务员"
+              defaultValue={ this.state.nowRecord && this.state.nowRecord.operator_id }
               onChange={ value=> { this.selectEmployee(value) } }
               optionFilterProp="children"
               filterOption={(input, option) => option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0}
