@@ -4,7 +4,8 @@ import {
   Form,
   Select,
   Input,
-  Button
+  Button,
+  DatePicker
 } from 'antd';
 
 class SearchHeader extends Component {
@@ -81,6 +82,16 @@ class SearchHeader extends Component {
                 initialValue: this.props.companyName
               })(
                 <Input style={{ width: 170 }} />
+              )
+            }
+          </Form.Item>
+
+          <Form.Item label={this.props.type === 'plantCert' ? "创建时间": "开证时间"}>
+            {
+              getFieldDecorator('createTime', {
+                
+              })(
+                <DatePicker />
               )
             }
           </Form.Item>

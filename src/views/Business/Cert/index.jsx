@@ -30,7 +30,8 @@ class Cert extends Component {
       params: {
         certType: data.certType || '',
         status: data.status || '',
-        companyName: data.companyName || ''
+        companyName: data.companyName || '',
+        createTime: data.createTime && data.createTime.format('YYYY-MM-DD') || ''
       }
     }).then((res) => {
       if(res && res.data.code == 0) {

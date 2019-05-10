@@ -35,7 +35,8 @@ class PlantCert extends Component {
       method: 'GET',
       params: {
         status: data.status || '',
-        companyName: data.companyName || ''
+        companyName: data.companyName || '',
+        createTime: data.createTime && data.createTime.format('YYYY-MM-DD') || ''
       }
     }).then((res) => {
       if (res && res.data.code === 0) {
@@ -403,7 +404,7 @@ class PlantCert extends Component {
         )
       }
     ];
-//窗口指定
+    //窗口指定
     const pagination = {
       pageSizeOptions: ['10', '20', '50'],
       showQuickJumper: true,
