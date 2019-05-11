@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
-import { Row, Col, Form, Tabs, Tag, Button } from 'antd';
+import { Row, Col, Form, Tabs, Tag, Button, Modal, message } from 'antd';
 
 import CompanyData from './components/CompanyData';
 
 import './index.less';
-
+const confirm = Modal.confirm;
 class CompanyDetail extends Component {
   state = {
     company: {},
@@ -134,7 +134,28 @@ class CompanyDetail extends Component {
       }
     });
   }
-
+  // 删除企业弹出
+  showDeleteCompanyModal = () => {
+    Modal.confirm({
+      title: '提示',
+      content: '是否确认删除该企业？',
+      okType: 'danger',
+      onOk: () => {
+        window.$http({
+          url: '/admin/company/cancel',
+          method: 'PUT',
+          data: {
+            id: window.$querystring.parse(this.props.location.search.slice(1)).id
+          }
+        }).then((res) => {
+          if(res && res.data.code == 0) {
+            message.success('删除企业成功');
+            this.props.history.push('/app/company/companyInfo')
+          }
+        });
+      }
+    });
+  }
   render() {
     const status = ['', '待审核', '已注册', '未通过', '已注销', '已停开'];
     const statusColor = ['', '#108ee9', '#87d068', '#f50', '#eee'];
@@ -208,6 +229,13 @@ class CompanyDetail extends Component {
                 style={{ marginLeft: 15 }}
               >
                 查看企业木材运输证与植物检疫申请
+              </Button>
+              <Button 
+                type="danger" 
+                onClick={ () => { this.showDeleteCompanyModal() } }
+                style={{ marginLeft: 15 }}
+              >
+                删除
               </Button>
 
               <Button 
