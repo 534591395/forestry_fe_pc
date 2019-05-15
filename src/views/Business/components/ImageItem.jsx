@@ -22,9 +22,10 @@ class ImageItem extends Component {
     height: ''
   }
 
-  setImageModalData = (imageSrc) => {
+  setImageModalData = (imageSrc, index) => {
     this.setState({imageDetailModal: true});
     this.setState({imageSrc});
+    this.setState({index});
   }
 
   // 切换图片后触发
@@ -78,37 +79,6 @@ class ImageItem extends Component {
 
         {/* <div style={{ marginTop: 15, marginBottom: 15, display: 'flex', flexWrap: 'wrap' }}> */}
         <div className="carousel-box">
-            {
-              // this.props.images.length ?
-              //   <Carousel afterChange={e => this.onChange(e)} ref="Carousel" dots={false}>
-              //   {
-              //     this.props.images.map((item, index) => {
-              //       return (
-              //           <div key={ index }>
-              //             <img 
-              //               src={ item } 
-              //               alt="" 
-              //               style={{ height: 160, width: '100%', cursor: 'pointer'}}
-              //               onClick={ () => { this.setImageModalData(item) } } 
-              //             />
-              //             {/* <div>
-              //               <p>{ this.props.timeList && this.props.timeList[index] }</p>
-              //               <p>{ this.props.timeList && this.props.locationList[index] }</p>
-              //             </div> */}
-              //           </div>
-              //       )
-              //     })
-              //   }
-              //   </Carousel> : ''
-            }
-
-            {/* {this.props.images.length> 1 ? 
-              <div>
-                  <div className="carousel-left"><Icon type="arrow-left" onClick={e => this.prev()}/></div>
-                  <div className="carousel-right"><Icon type="arrow-right" onClick={e=> this.next()}/></div>
-                  <div className="carousel-num">{index+1}/{this.props.images.length}</div>
-              </div> : ""
-            } */}
         </div> 
         {
           this.props.images.length ? <div className="img-box-h">
@@ -119,22 +89,25 @@ class ImageItem extends Component {
                   src={ item } 
                   alt="" 
                   style={{ height: 160, cursor: 'pointer', marginRight: '10px' }}
-                  onClick={ () => { this.setImageModalData(item) } } 
+                  onClick={ () => { this.setImageModalData(item, index) } } 
                 />
                 )
               })}
           </div> : null
         }   
-        <div>
-          <p>{ this.props.timeList && this.props.timeList[index] }</p>
-          <p>{ this.props.timeList && this.props.locationList[index] }</p>
-          <p>{ this.props.carNumberList && this.props.carNumberList[index] }</p>
-        </div>
+
+        {
+          this.props.type == 'plantCert' ? <div>
+            <p>{ this.props.timeList.join(',') }</p>
+            <p>{ this.props.locationList.join(',') }</p>
+            <p>{ this.props.carNumberList.join(',') }</p>
+          </div> : null
+        }
         {/* </div> */}
  
         <Modal 
           width={1000} 
-          title="查看图片" 
+          title={ this.props.type == 'plantCert' ? this.props.version == 1 ?  '查看图片' : `${this.props.carNumberList[this.state.index]} ${this.props.timeList[this.state.index]} ${this.props.locationList[this.state.index]}` : '查看图片'}
           visible={ this.state.imageDetailModal } 
           footer={ null }
           onCancel={ () => { this.setState({imageDetailModal: false, current: 90, transStyle:'rotate('+0+'deg)'}) } }
