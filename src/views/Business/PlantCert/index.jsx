@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Table, message, Modal, Form, Input, Button, Select } from 'antd';
+import { Table, message, Modal, Form, Input, Button, Select, Checkbox, Row, Col } from 'antd';
 
 import SearchHeader from '../components/SearchHeader';
 import ImageItem from '../components/ImageItem';
@@ -26,7 +26,9 @@ class PlantCert extends Component {
     employeeList: [],
     showEmployeeModel: false,
     nowRecord: null,
-    selectEmployeeId: null
+    selectEmployeeId: null,
+    showCarNumberModel: false,
+    choiceCarNumbers: ''
   }
   // 获取运输证列表
   getPlantCertList = (data) => {
@@ -254,6 +256,53 @@ class PlantCert extends Component {
       }
     });
   }
+  // 车牌作废,弹出框
+  cancelCarNumber = (title, record) => {
+    this.setState({
+      showCarNumberModel: true,
+      nowRecord: record
+    });
+  }
+  checkboxChange = (values) => {
+    this.setState({
+      choiceCarNumbers: values.join(',')
+    });
+  }
+  // 作废 下发
+  setCarNumberCancel() {
+    window.$http({
+      url: `/admin/business/setCarNumberCancel`,
+      method: 'PUT',
+      data: {
+        id: this.state.nowRecord.id,
+        choiceCarNumbers: this.state.choiceCarNumbers
+      }
+    }).then((res) => {
+      if(res && res.data.code == 0) {
+        message.success('作废操作成功');
+        let tableData = this.state.tableData || [];
+        tableData.map(item => {
+          if (item.id === this.state.nowRecord.id) {
+            let arr3 = [];
+            let arr = item.car_number.split(',');
+            let arr2 = this.state.choiceCarNumbers.split(',');
+            arr.map(item => {
+              if (arr2.indexOf(item) === -1) {
+                arr3.push(item);
+              }
+            });
+            item.car_number = arr3.join(',');
+          }
+        });
+        this.setState({
+          tableData: tableData,
+          showCarNumberModel: false,
+          nowRecord: null,
+          choiceCarNumbers: null
+        });
+      }
+    });
+  }
   selChange() {
 
   }
@@ -392,12 +441,17 @@ class PlantCert extends Component {
         render: (text, record) => (
           <div>
             <span>
-              <a href="javascript: void(0);" style={{ marginRight: '15px' }} onClick={ ($event) => { this.operateRecord('查看', record) } }>查看</a>
+              <a href="javascript: void(0);" style={{ marginRight: '5px' }} onClick={ ($event) => { this.operateRecord('查看', record) } }>查看</a>
             </span>
             <span>
               {
                 this.getRole().indexOf(1)  > -1 || this.getRole().indexOf(2)  > -1 ? 
-                <a href="javascript: void(0);" style={{ marginRight: '15px' }} onClick={ ($event) => { this.setToEmployee('分派到业务员', record) } }>{ typeof record.operator_id !== 'undefined' && record.operator_id != "" && record.operator_id !== null ? '已分派': '分派'}</a> : ''
+                <a href="javascript: void(0);" style={{ marginRight: '5px' }} onClick={ ($event) => { this.setToEmployee('分派到业务员', record) } }>{ typeof record.operator_id !== 'undefined' && record.operator_id != "" && record.operator_id !== null ? '已分派': '分派'}</a> : ''
+              }
+            </span>
+            <span>
+              {
+                record.status == 4 && JSON.parse(record.wood_json).woodList.length == 1 && record.version == 2 ? <a href="javascript: void(0);" style={{ marginRight: '5px' }} onClick={ ($event) => { this.cancelCarNumber('作废', record) } }>作废</a> : ''
               }
             </span>
           </div>
@@ -447,6 +501,28 @@ class PlantCert extends Component {
                 return <Option value={item.id} key={index}>{item.username}</Option>
               })}
             </Select>  
+          
+          </Modal>
+
+          <Modal
+          title="作废车牌号"
+          destroyOnClose={true}
+          visible={ this.state.showCarNumberModel }
+          maskClosable={ false }
+          onCancel={ () => { this.setState({showCarNumberModel: false}) } }
+          onOk={ () => { this.setCarNumberCancel() } }
+          >
+            <Checkbox.Group style={{ width: '100%' }} onChange={ values => this.checkboxChange(values)}>
+              <Row>
+              {
+                this.state.nowRecord && this.state.nowRecord.car_number.split(',').map( (car_number, index) => {
+                 return <Col span={8} key={index}>
+                    <Checkbox value={car_number}>{car_number}</Checkbox>
+                  </Col>
+                } ) 
+              }
+              </Row>
+            </Checkbox.Group>
           
           </Modal>
 
