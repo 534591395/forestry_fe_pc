@@ -300,6 +300,36 @@ class PlantCert extends Component {
               }
             });
             item.car_number = arr3.join(',');
+            if (!arr3.length) {
+              item.status = 3;
+            }
+            let amount = 0;
+            let woodList = JSON.parse(item.wood_json).woodList;
+            let wood = woodList[0];
+            let levelAmount = Number(wood.amount)/arr.length;
+            amount = levelAmount * arr2.length;
+            wood.amount = Math.round((Number(wood.amount) - amount)*100)/100;
+            item.wood_json = JSON.stringify({woodList: woodList});
+
+
+            let first_variety_01 = []
+            let first_variety_02 = []
+            let plants = this.state.plants;
+            let woods = this.state.woods;
+            let producing_areaArr = item.producing_area.split(',');
+            woodList.map( (innerItem, index) => {
+              innerItem.producing_area = producing_areaArr[index];
+              if ( innerItem.first_variety == 'first_variety_01') {
+                first_variety_01.push({plants: plants[innerItem.plant_variety], amount: innerItem.amount, woods: woods[innerItem.wood_variety], producing_area: innerItem.producing_area})
+              }
+              if ( innerItem.first_variety == 'first_variety_02') {
+                first_variety_02.push({plants: plants[innerItem.plant_variety], amount: innerItem.amount, woods: woods[innerItem.wood_variety], producing_area: innerItem.producing_area})
+              }
+            })
+            item.first_variety_01 = first_variety_01
+            item.first_variety_02 = first_variety_02
+
+
           }
         });
         this.setState({
