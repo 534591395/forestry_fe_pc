@@ -152,6 +152,10 @@ class PlantCert extends Component {
         }
         break;
       }
+      case '回签': {
+        this.invokePlantCert(record.id, 7, null, record.cid);
+        break;
+      }
       case '查看': {
         this.setState({images: record.picture_url ? record.picture_url.split(',') : []});
         this.setState({timeList: record.picture_time ? record.picture_time.split(',') : []});
@@ -208,7 +212,11 @@ class PlantCert extends Component {
       }
     }).then((res) => {
       if(res && res.data.code == 0) {
-        message.success('审核成功');
+        if (status == 7) {
+          message.success('回签成功');
+        } else {
+          message.success('审核成功');
+        }
         this.setState({
           showInfo: false
         }, () => {
@@ -356,11 +364,15 @@ class PlantCert extends Component {
     }
     return roleArr;
   }
+  // 回签
+  signBack = () => {
+    this.operateRecord('回签', this.state.info)
+  }
   render() {
     let info = this.state.info;
     let status = this.state.info.status;
     const { getFieldDecorator } = this.props.form;
-    const statusMap = ['', '待审核', '已通过', '未通过', '待上传照片', '待审核照片'];
+    const statusMap = ['', '待审核', '已通过', '未通过', '待上传照片', '待审核照片', '待回签', '已回签'];
     // const optMap = ['', ['查看', '通过', '驳回'], ['查看'], ['查看'], ['查看', '通过', '驳回']];
 
     const Option = Select.Option;
@@ -532,8 +544,12 @@ class PlantCert extends Component {
           maskClosable={ false }
           width={1000}
           onCancel={ () => { this.setState({showInfo: false}) } }
-          footer={ status == 5 ? [<Button key="submit" type="primary" onClick={this.imgHandleOk}>通过</Button>,
-          <Button key="back" onClick={this.handleCancel}>驳回</Button>] : null}
+          footer={ 
+            status == 5 ? 
+            [<Button key="submit" type="primary" onClick={this.imgHandleOk}>通过</Button>,
+             <Button key="back" onClick={this.handleCancel}>驳回</Button>] : 
+            status == 6 ? 
+            [<Button key="signBack" type="primary" onClick={this.signBack}>回签</Button>] : null}
         >
         <Form>
           <div className="info"> 
