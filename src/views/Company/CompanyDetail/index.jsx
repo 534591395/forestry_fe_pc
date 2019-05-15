@@ -230,13 +230,17 @@ class CompanyDetail extends Component {
               >
                 查看企业木材运输证与植物检疫申请
               </Button>
-              <Button 
+              {
+                this.state.company.status == 4 ? 
+                '' :
+                <Button 
                 type="danger" 
                 onClick={ () => { this.showDeleteCompanyModal() } }
                 style={{ marginLeft: 15 }}
               >
                 删除
               </Button>
+              }
 
               <Button 
                 type="primary" 
