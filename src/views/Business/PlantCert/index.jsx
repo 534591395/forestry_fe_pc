@@ -131,7 +131,7 @@ class PlantCert extends Component {
   operateRecord = (item, record, param) => {
     switch (item) {
       case '通过': {
-        if (record.picture_url) {
+        if (record.status == 5) {
           this.invokePlantCert(record.id, 2, null, record.cid);
         }
         else {
@@ -311,7 +311,7 @@ class PlantCert extends Component {
     let info = this.state.info;
     let status = this.state.info.status;
     const { getFieldDecorator } = this.props.form;
-    const statusMap = ['', '待审核', '已通过', '未通过', '待上传照片'];
+    const statusMap = ['', '待审核', '已通过', '未通过', '待上传照片', '待审核照片'];
     // const optMap = ['', ['查看', '通过', '驳回'], ['查看'], ['查看'], ['查看', '通过', '驳回']];
 
     const Option = Select.Option;
@@ -456,7 +456,7 @@ class PlantCert extends Component {
           maskClosable={ false }
           width={1000}
           onCancel={ () => { this.setState({showInfo: false}) } }
-          footer={ status == 1 && this.state.images.length > 0 ? [<Button key="submit" type="primary" onClick={this.imgHandleOk}>通过</Button>,
+          footer={ status == 5 ? [<Button key="submit" type="primary" onClick={this.imgHandleOk}>通过</Button>,
           <Button key="back" onClick={this.handleCancel}>驳回</Button>] : null}
         >
         <Form>
@@ -586,7 +586,7 @@ class PlantCert extends Component {
               locationList={ this.state.locationList } 
               carNumberList={ this.state.carNumberList }
             />
-             { (this.state.show_refuse_reason && status == 1 && this.state.images.length > 0) ? <Form.Item label="驳回原因: ">
+             { (this.state.show_refuse_reason && status == 5) ? <Form.Item label="驳回原因: ">
               { getFieldDecorator('refuse_reason', {
                 rules: [{ required: true, message: '请填写驳回原因' }]
               })(
