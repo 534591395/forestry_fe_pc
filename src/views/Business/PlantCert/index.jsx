@@ -28,10 +28,14 @@ class PlantCert extends Component {
     nowRecord: null,
     selectEmployeeId: null,
     showCarNumberModel: false,
-    choiceCarNumbers: ''
+    choiceCarNumbers: '',
+    loading: false
   }
   // 获取运输证列表
   getPlantCertList = (data) => {
+    this.setState({
+      loading: true
+    });
     window.$http({
       url: `/admin/business/getPlantCertList`,
       method: 'GET',
@@ -67,7 +71,15 @@ class PlantCert extends Component {
           item.first_variety_01 = first_variety_01
           item.first_variety_02 = first_variety_02
         })
-        this.setState({tableData: list});
+        this.setState({tableData: list}, () => {
+          this.setState({
+            loading: false
+          });
+        });
+      } else {
+        this.setState({
+          loading: false
+        });
       }
     });
   }
@@ -133,7 +145,7 @@ class PlantCert extends Component {
   operateRecord = (item, record, param) => {
     switch (item) {
       case '通过': {
-        if (record.picture_url || record.status == 5) {
+        if (record.status == 5) {
           this.invokePlantCert(record.id, 2, null, record.cid);
         }
         else {
@@ -144,7 +156,7 @@ class PlantCert extends Component {
       }
       case '驳回': {
         // 若已经上传了证书图片，此时点击驳回后，状态改成 待上传图片
-        if (record.picture_url) {
+        if (record.status == 5) {
           // 这里约定 状态传 -2，由服务端重置状态为 4
           this.refuse(record.id, -2, param, record.cid);
         } else {
@@ -300,6 +312,7 @@ class PlantCert extends Component {
               }
             });
             item.car_number = arr3.join(',');
+            item.car_amount = arr3.length;
             if (!arr3.length) {
               item.status = 3;
             }
@@ -518,6 +531,7 @@ class PlantCert extends Component {
           columns={ columns } 
           dataSource={ this.state.tableData } 
           pagination={ pagination } 
+          loading={ this.state.loading }
           bordered 
           rowKey={ record => record.number }
         />
@@ -575,7 +589,7 @@ class PlantCert extends Component {
           width={1000}
           onCancel={ () => { this.setState({showInfo: false}) } }
           footer={ 
-            (status == 5 || (status == 1 && this.state.images.length > 0)) ? 
+            status == 5 ? 
             [<Button key="submit" type="primary" onClick={this.imgHandleOk}>通过</Button>,
              <Button key="back" onClick={this.handleCancel}>驳回</Button>] : 
             status == 6 ? 
@@ -710,7 +724,7 @@ class PlantCert extends Component {
               version={ info.version }
               type="plantCert"
             />
-             { (this.state.show_refuse_reason && (status == 5 || status == 1 && this.state.images.length > 0)) ? <Form.Item label="驳回原因: ">
+             { (this.state.show_refuse_reason && status == 5) ? <Form.Item label="驳回原因: ">
               { getFieldDecorator('refuse_reason', {
                 rules: [{ required: true, message: '请填写驳回原因' }]
               })(
