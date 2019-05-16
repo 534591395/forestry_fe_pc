@@ -681,7 +681,7 @@ class PlantCert extends Component {
               </div>
             </div>
           </div>
-            {!this.state.show_refuse_reason && status == 1 && this.state.images.length == 0 ? <Form.Item label="领证窗口: ">
+            {!this.state.show_refuse_reason && status == 1 ? <Form.Item label="领证窗口: ">
                           { getFieldDecorator('windows', {
                             rules: [{ required: true, message: '请选择领证窗口' }]
                           })(
@@ -700,7 +700,7 @@ class PlantCert extends Component {
                             </Select>
                           ) }
             </Form.Item> : null}
-            { (this.state.show_refuse_reason && status == 1 && this.state.images.length == 0) ? <Form.Item label="驳回原因: ">
+            { (this.state.show_refuse_reason && status == 1) ? <Form.Item label="驳回原因: ">
               { getFieldDecorator('refuse_reason', {
                 rules: [{ required: true, message: '请填写驳回原因' }]
               })(
@@ -708,7 +708,7 @@ class PlantCert extends Component {
               ) }
             </Form.Item> : null}
           {
-            (status == 1 && this.state.images.length == 0)? <div style={{textAlign: 'right'}}>
+            (status == 1)? <div style={{textAlign: 'right'}}>
             <Button key="submit" type="primary" onClick={this.handleOk}>通过</Button> 
             <Button key="back" onClick={this.handleCancel} style={{marginLeft: 8}}>驳回</Button>
           </div> : null
