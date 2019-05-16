@@ -133,7 +133,7 @@ class PlantCert extends Component {
   operateRecord = (item, record, param) => {
     switch (item) {
       case '通过': {
-        if (record.status == 5) {
+        if (record.picture_url || record.status == 5) {
           this.invokePlantCert(record.id, 2, null, record.cid);
         }
         else {
@@ -575,7 +575,7 @@ class PlantCert extends Component {
           width={1000}
           onCancel={ () => { this.setState({showInfo: false}) } }
           footer={ 
-            status == 5 ? 
+            (status == 5 || (status == 1 && this.state.images.length > 0)) ? 
             [<Button key="submit" type="primary" onClick={this.imgHandleOk}>通过</Button>,
              <Button key="back" onClick={this.handleCancel}>驳回</Button>] : 
             status == 6 ? 
@@ -710,7 +710,7 @@ class PlantCert extends Component {
               version={ info.version }
               type="plantCert"
             />
-             { (this.state.show_refuse_reason && status == 5) ? <Form.Item label="驳回原因: ">
+             { (this.state.show_refuse_reason && (status == 5 || status == 1 && this.state.images.length > 0)) ? <Form.Item label="驳回原因: ">
               { getFieldDecorator('refuse_reason', {
                 rules: [{ required: true, message: '请填写驳回原因' }]
               })(
