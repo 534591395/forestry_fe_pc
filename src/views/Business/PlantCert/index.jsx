@@ -265,7 +265,7 @@ class PlantCert extends Component {
           let tableData = this.state.tableData;
           tableData.map( (item, index) => {
             if (item.id == id) {
-              item.status = status == -2 ? 1 : status;
+              item.status = status == -2 ? 4 : status;
               item.refuse_reason = refuse_reason;
             }
           } );
