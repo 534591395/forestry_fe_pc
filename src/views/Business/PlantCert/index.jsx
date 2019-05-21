@@ -129,7 +129,11 @@ class PlantCert extends Component {
         let tableData = this.state.tableData || [];
         tableData.map(item => {
           if (item.id === this.state.nowRecord.id) {
-            item.operator_id = this.state.selectEmployeeId
+            item.operator_id = this.state.selectEmployeeId;
+            if (window.$session.get('user')) {
+              item.operator_admin_Name = window.$session.get('user').username;
+              item.operator_admin_id = window.$session.get('user').uid;
+            }
           }
         });
         this.setState({
@@ -556,7 +560,8 @@ class PlantCert extends Component {
               {this.state.employeeList.map ((item, index) => {
                 return <Option value={item.id} key={index}>{item.username}</Option>
               })}
-            </Select>  
+            </Select>
+            <span style={{marginLeft: '10px'}}>分派人：{this.state.nowRecord && this.state.nowRecord.operator_admin_Name}</span>  
           
           </Modal>
 
