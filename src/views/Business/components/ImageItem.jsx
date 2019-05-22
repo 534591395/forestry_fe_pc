@@ -35,7 +35,7 @@ class ImageItem extends Component {
       index: e
     });
   }
-
+// 上一张
   prev = () => {
     let index = this.state.index
     index --
