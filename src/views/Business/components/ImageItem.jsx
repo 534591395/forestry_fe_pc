@@ -36,16 +36,20 @@ class ImageItem extends Component {
     });
   }
 
-  prev() {
-    if (this.refs.Carousel) {
-      this.refs.Carousel.prev();
-    }
+  prev = () => {
+    let index = this.state.index
+    index --
+    this.setState({
+      index: index
+    })
   }
 
-  next() {
-    if (this.refs.Carousel) {
-      this.refs.Carousel.next();
-    }
+  next = () => {
+    let index = this.state.index
+    index ++
+    this.setState({
+      index: index
+    })
   }
   constructor(props) {
     super(props);
@@ -112,10 +116,11 @@ class ImageItem extends Component {
           footer={ null }
           onCancel={ () => { this.setState({imageDetailModal: false, current: 90, transStyle:'rotate('+0+'deg)'}) } }
         >
-          <img ref={this.saveRef} src={ this.state.imageSrc } alt="" className="img_modal" style={{ transform:this.state.transStyle, height: this.state.height}} />
+          <img ref={this.saveRef} src={ this.props.images[this.state.index] } alt="" className="img_modal" style={{ transform:this.state.transStyle, height: this.state.height}} />
           <div style={{textAlign: "center", marginTop: "24px"}}>
-
-            <Button onClick = { this.translate }>旋转<Icon type="reload" theme="outlined" /></Button>
+            <Button disabled={ this.state.index == 0 } onClick={ this.prev }>上一张</Button>
+            <Button onClick ={ this.translate } style={{ margin : '0 20px' }}>旋转<Icon type="reload" theme="outlined"/></Button>
+            <Button disabled={ this.state.index == this.props.images.length - 1 } onClick={ this.next }>下一张</Button>
           </div>
         </Modal>
       </div>
