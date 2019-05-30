@@ -560,6 +560,7 @@ class PlantCert extends Component {
       showTotal: (total) => (`总共 ${this.state.page.total} 条`),
       onShowSizeChange: (current, size) => {this.changePageSize(current, size)},
       onChange: pageNum => { this.changePageNum(pageNum) },
+      current: this.state.page.current,
       total: this.state.page.total
     }
 
