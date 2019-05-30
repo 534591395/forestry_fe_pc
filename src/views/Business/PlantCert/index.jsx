@@ -8,6 +8,11 @@ import './index.less';
 
 class PlantCert extends Component {
   state = {
+    page: {
+      current: 1,
+      size: 10,
+      total: 0
+    },
     tableData: [],
     imageModal: false,
     images: [],
@@ -29,20 +34,32 @@ class PlantCert extends Component {
     selectEmployeeId: null,
     showCarNumberModel: false,
     choiceCarNumbers: '',
-    loading: false
+    loading: false,
+    filter: {}
   }
   // 获取运输证列表
-  getPlantCertList = (data) => {
+  getPlantCertList = (data, isSearch) => {
     this.setState({
       loading: true
     });
+    if (isSearch) {
+      let page = this.state.page;
+      page.current = 1;
+      page.total = 0;
+      this.setState({
+        filter: data || {},
+        page: page
+      });
+    }
     window.$http({
       url: `/admin/business/getPlantCertList`,
       method: 'GET',
       params: {
-        status: data.status || '',
-        companyName: data.companyName || '',
-        createTime: data.createTime && data.createTime.format('YYYY-MM-DD') || ''
+        status: isSearch ? (data.status || '') : (this.state.filter.status || ''),
+        companyName: isSearch ? (data.companyName || '') : (this.state.filter.companyName || ''),
+        createTime: isSearch? (data.createTime && data.createTime.format('YYYY-MM-DD') || '') : (this.state.filter.createTime && this.state.filter.createTime.format('YYYY-MM-DD') || ''),
+        pageNum: this.state.page.current,
+        pageSize: this.state.page.size
       }
     }).then((res) => {
       if (res && res.data.code === 0) {
@@ -70,8 +87,10 @@ class PlantCert extends Component {
           })
           item.first_variety_01 = first_variety_01
           item.first_variety_02 = first_variety_02
-        })
-        this.setState({tableData: list}, () => {
+        });
+        let page = this.state.page;
+        page.total = res.data.data.total || 0;
+        this.setState({tableData: list, page: page}, () => {
           this.setState({
             loading: false
           });
@@ -415,6 +434,22 @@ class PlantCert extends Component {
   signBack = () => {
     this.operateRecord('回签', this.state.info)
   }
+  
+  changePageNum = (pageNum) => {
+    let data = Object.assign({}, this.state.page, {current: pageNum})
+    this.setState({page: data}, () => {
+      this.getPlantCertList();
+    });
+    
+  }
+
+  changePageSize = (current, size) => {
+    let data = Object.assign({}, this.state.page, {current: 1, size})
+    this.setState({page: data}, () => {
+      this.getPlantCertList();
+    });
+  }
+
   render() {
     let info = this.state.info;
     let status = this.state.info.status;
@@ -519,10 +554,13 @@ class PlantCert extends Component {
     ];
     //窗口指定
     const pagination = {
-      pageSizeOptions: ['10', '20', '50'],
+      pageSizeOptions: ['1','10', '20', '50'],
       showQuickJumper: true,
       showSizeChanger: true,
-      showTotal: (total) => (`总共 ${total} 条`)
+      showTotal: (total) => (`总共 ${this.state.page.total} 条`),
+      onShowSizeChange: (current, size) => {this.changePageSize(current, size)},
+      onChange: pageNum => { this.changePageNum(pageNum) },
+      total: this.state.page.total
     }
 
     return (
@@ -538,6 +576,7 @@ class PlantCert extends Component {
           loading={ this.state.loading }
           bordered 
           rowKey={ record => record.number }
+          
         />
 
         <Modal

@@ -103,7 +103,7 @@ class SearchHeader extends Component {
             <Button 
               type="primary" 
               onClick={
-                () => { this.props.getList(this.props.form.getFieldsValue()) }
+                () => { this.props.getList(this.props.form.getFieldsValue(), true) }
               }
             >
               搜索
