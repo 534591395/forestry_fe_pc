@@ -554,7 +554,7 @@ class PlantCert extends Component {
     ];
     //窗口指定
     const pagination = {
-      pageSizeOptions: ['1','10', '20', '50'],
+      pageSizeOptions: ['10', '20', '50'],
       showQuickJumper: true,
       showSizeChanger: true,
       showTotal: (total) => (`总共 ${this.state.page.total} 条`),
