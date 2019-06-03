@@ -116,11 +116,31 @@ class ImageItem extends Component {
           footer={ null }
           onCancel={ () => { this.setState({imageDetailModal: false, current: 90, transStyle:'rotate('+0+'deg)'}) } }
         >
-          <img ref={this.saveRef} src={ this.props.images[this.state.index] } alt="" className="img_modal" style={{ transform:this.state.transStyle, height: this.state.height}} />
+          <div className="image-detail-box">
+            <img ref={this.saveRef} src={ this.props.images[this.state.index] } alt="" className="img_modal" style={{ transform:this.state.transStyle, height: this.state.height}} />
+            {
+              this.props.images.length > 1 ? 
+              <div className="arrow-box">
+                {/* 判断是否第一张 */}
+                {
+                  this.state.index == 0 ? 
+                  <Icon type="left-circle" style={{ fontSize: '40px', color: '#ccc', cursor: 'not-allowed' }} />
+                  : <Icon onClick={ this.prev } type="left-circle" style={{ fontSize: '40px', color: '#fff', cursor: 'pointer' }} />
+                }
+                {/* 判断是否为最后一张 */}
+                {
+                  this.state.index == this.props.images.length - 1 ? 
+                  <Icon type="right-circle" style={{ fontSize: '40px', color: '#ccc', cursor: 'not-allowed' }} />
+                  : <Icon onClick={ this.next } type="right-circle" style={{ fontSize: '40px', color: '#fff', cursor: 'pointer' }} />
+                }
+              </div>
+              : null
+            }
+          </div>
           <div style={{textAlign: "center", marginTop: "24px"}}>
-            <Button disabled={ this.state.index == 0 } onClick={ this.prev }>上一张</Button>
+            {/* <Button disabled={ this.state.index == 0 } onClick={ this.prev }>上一张</Button> */}
             <Button onClick ={ this.translate } style={{ margin : '0 20px' }}>旋转<Icon type="reload" theme="outlined"/></Button>
-            <Button disabled={ this.state.index == this.props.images.length - 1 } onClick={ this.next }>下一张</Button>
+            {/* <Button disabled={ this.state.index == this.props.images.length - 1 } onClick={ this.next }>下一张</Button> */}
           </div>
         </Modal>
       </div>
