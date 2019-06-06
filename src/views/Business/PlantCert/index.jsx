@@ -58,6 +58,7 @@ class PlantCert extends Component {
         status: isSearch ? (data.status || '') : (this.state.filter.status || ''),
         companyName: isSearch ? (data.companyName || '') : (this.state.filter.companyName || ''),
         createTime: isSearch? (data.createTime && data.createTime.format('YYYY-MM-DD') || '') : (this.state.filter.createTime && this.state.filter.createTime.format('YYYY-MM-DD') || ''),
+        carNumber: isSearch ? (data.carNumber || '') : (this.state.filter.carNumber || ''),
         pageNum: this.state.page.current,
         pageSize: this.state.page.size
       }

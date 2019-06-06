@@ -16,13 +16,15 @@ class SearchHeader extends Component {
       PropTypes.number
     ]),
     companyName: PropTypes.string,
-    type: PropTypes.string
+    type: PropTypes.string,
+    carNumber: PropTypes.string
   }
 
   static defaultProps  = {
     status: '',
     companyName: '',
-    type: 'cert'
+    type: 'cert',
+    carNumber: ''
   }
 
   state = {
@@ -60,7 +62,10 @@ class SearchHeader extends Component {
             )
           }
 
-          <Form.Item label="状态">
+
+          {
+            this.props.type === 'plantCert' ?
+            <Form.Item label="状态">
             {
               getFieldDecorator('status', {
                 initialValue: this.props.status
@@ -77,7 +82,22 @@ class SearchHeader extends Component {
                 </Select>
               )
             }
-          </Form.Item>
+           </Form.Item> : 
+            <Form.Item label="状态">
+            {
+              getFieldDecorator('status', {
+                initialValue: this.props.status
+              })(
+                <Select style={{ width: 170 }}>
+                  <Select.Option value="">全部</Select.Option>
+                  <Select.Option value={ 1 }>待审核</Select.Option>
+                  <Select.Option value={ 2 }>已通过</Select.Option>
+                  <Select.Option value={ 3 }>未通过</Select.Option>
+                </Select>
+              )
+            }
+           </Form.Item>
+          }
 
           <Form.Item label="企业名称">
             {
@@ -88,6 +108,19 @@ class SearchHeader extends Component {
               )
             }
           </Form.Item>
+          {
+            this.props.type === 'plantCert' ?
+            <Form.Item label="车牌">
+            {
+              getFieldDecorator('carNumber', {
+                initialValue: this.props.carNumber
+              })(
+                <Input style={{ width: 170 }} />
+              )
+            }
+          </Form.Item> : ''
+          } 
+
 
           <Form.Item label={this.props.type === 'plantCert' ? "创建时间": "开证时间"}>
             {
