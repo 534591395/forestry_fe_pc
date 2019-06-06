@@ -147,6 +147,25 @@ class CompanyData extends Component {
 
           <div>
             <Form.Item style={{ marginLeft: 8, marginTop: 20 }}>
+              <span style={{ fontWeight: 700 }}>企业补充资料</span>
+            </Form.Item>
+            <div style={{ marginLeft: 24 }}>
+             <Row>
+                <Col span={ 12 }>
+                  <Form.Item label="附件">
+                    {
+                      (this.props.company.buchongziliaoPicList || []).map((picurl, index) => {
+                        return <img src={ picurl } key={index} alt="" className="img" onClick={ () => { this.setImageModalData(picurl) } } />
+                      })
+                    }
+                  </Form.Item>
+                </Col>
+             </Row>
+            </div>
+          </div>
+
+          <div>
+            <Form.Item style={{ marginLeft: 8, marginTop: 20 }}>
               <span style={{ fontWeight: 700 }}>生产销售相关</span>
             </Form.Item>
             <div style={{ marginLeft: 24 }}>
