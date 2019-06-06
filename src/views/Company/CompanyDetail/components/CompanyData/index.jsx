@@ -155,7 +155,9 @@ class CompanyData extends Component {
                   <Form.Item label="附件">
                     {
                       (this.props.company.buchongziliaoPicList || []).map((picurl, index) => {
-                        return <img src={ picurl } key={index} alt="" className="img" onClick={ () => { this.setImageModalData(picurl) } } />
+                        if (picurl) {
+                          return <img src={ picurl } key={index} alt="" className="img" onClick={ () => { this.setImageModalData(picurl) } } />
+                        }
                       })
                     }
                   </Form.Item>
