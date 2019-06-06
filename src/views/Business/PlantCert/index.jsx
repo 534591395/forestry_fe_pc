@@ -191,6 +191,11 @@ class PlantCert extends Component {
         this.invokePlantCert(record.id, 7, null, record.cid);
         break;
       }
+      case '回签驳回': {
+        // -3 ，后台区分一下（实际状态改成3）
+        this.huiqianBohui(record.id, -3, record.cid);
+        break;
+      }
       case '查看': {
         this.setState({images: record.picture_url ? record.picture_url.split(',') : []});
         this.setState({timeList: record.picture_time ? record.picture_time.split(',') : []});
@@ -434,6 +439,34 @@ class PlantCert extends Component {
   signBack = () => {
     this.operateRecord('回签', this.state.info)
   }
+
+  // 待回签驳回请求
+  huiqianBohui = (id, status, cid) => {
+    window.$http({
+      url: `/admin/business/invokePlantCert`,
+      method: 'PUT',
+      data: {
+        id, status, cid
+      }
+    }).then((res) => {
+      if(res && res.data.code == 0) {
+        message.success('驳回成功');
+        this.setState({
+          showInfo: false
+        }, () => {
+          let tableData = this.state.tableData;
+          tableData.map( (item, index) => {
+            if (item.id == id) {
+              item.status = 3;
+            }
+          } );
+          this.setState({
+            tableData: tableData
+          });
+        });
+      }
+    });
+  }
   
   changePageNum = (pageNum) => {
     let data = Object.assign({}, this.state.page, {current: pageNum})
@@ -548,13 +581,19 @@ class PlantCert extends Component {
                 record.status == 4 && JSON.parse(record.wood_json).woodList.length == 1 && record.version == 2 ? <a href="javascript: void(0);" style={{ marginRight: '5px' }} onClick={ ($event) => { this.cancelCarNumber('作废', record) } }>作废</a> : ''
               }
             </span>
+            <span>
+              {
+                // 待回签 ==》 点击驳回，状态改为 未通过
+                record.status == 6 ? <a href="javascript: void(0);" style={{ marginRight: '5px' }} onClick={ ($event) => { this.operateRecord('回签驳回', record) } }>驳回</a> : ''
+              }
+            </span>
           </div>
         )
       }
     ];
     //窗口指定
     const pagination = {
-      pageSizeOptions: ['10', '20', '50'],
+      pageSizeOptions: ['1', '10', '20', '50'],
       showQuickJumper: true,
       showSizeChanger: true,
       showTotal: (total) => (`总共 ${this.state.page.total} 条`),
