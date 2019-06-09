@@ -8,6 +8,11 @@ import './index.less';
 
 class Cert extends Component {
   state = {
+    page: {
+      current: 1,
+      size: 10,
+      total: 0
+    },
     tableData: [],
     imageModal: false,
     imageList: [
@@ -20,22 +25,38 @@ class Cert extends Component {
     plants: {},
     loading: false,
     record: {},
-    show_refuse_reason: false
+    show_refuse_reason: false,
+    filter: {}
   }
 
-  getCertList = (data) => {
+  getCertList = (data, isSearch) => {
+    this.setState({
+      loading: true
+    });
+    if (isSearch) {
+      let page = this.state.page;
+      page.current = 1;
+      page.total = 0;
+      this.setState({
+        filter: data || {},
+        page: page
+      });
+    }
     window.$http({
       url: `/admin/business/getCertList`,
       method: 'GET',
       params: {
-        certType: data.certType || '',
-        status: data.status || '',
-        companyName: data.companyName || '',
-        createTime: data.createTime && data.createTime.format('YYYY-MM-DD') || ''
+        certType: isSearch ? (data.certType || '') : (this.state.filter.certType || ''),
+        status: isSearch ? (data.status || '') : (this.state.filter.status || ''),
+        companyName: isSearch ? (data.companyName || '') : (this.state.filter.companyName || ''),
+        createTime: isSearch ? (data.createTime && data.createTime.format('YYYY-MM-DD') || '') : (this.state.filter.createTime && this.state.filter.createTime.format('YYYY-MM-DD') || ''),
+        pageNum: this.state.page.current,
+        pageSize: this.state.page.size
       }
     }).then((res) => {
       if(res && res.data.code == 0) {
-        res.data.data.list.map(item => {
+        let list = res.data.data.list;
+        list.map(item => {
           if (item.first_variety === 'first_variety_01') {
             item.cert_type = '原木类开证';
           } else
@@ -48,8 +69,18 @@ class Cert extends Component {
           }
           
         });
-        this.setState({tableData: res.data.data.list});
         this.setState({plants: res.data.data.plants});
+        let page = this.state.page;
+        page.total = res.data.data.total || 0;
+        this.setState({tableData: list, page: page}, () => {
+          this.setState({
+            loading: false
+          });
+        });
+      } else {
+        this.setState({
+          loading: false
+        });
       }
     });
   }
@@ -213,6 +244,21 @@ class Cert extends Component {
       }
     });
   }
+  // 分页
+  changePageNum = (pageNum) => {
+    let data = Object.assign({}, this.state.page, {current: pageNum})
+    this.setState({page: data}, () => {
+      this.getCertList();
+    });
+    
+  }
+
+  changePageSize = (current, size) => {
+    let data = Object.assign({}, this.state.page, {current: 1, size})
+    this.setState({page: data}, () => {
+      this.getCertList();
+    });
+  }
   render() {
     const { getFieldDecorator } = this.props.form;
     const statusMap = ['', '待审核', '已通过', '未通过'];
@@ -274,10 +320,14 @@ class Cert extends Component {
     ];
 
     const pagination = {
-      pageSizeOptions: ['10', '20', '50'],
+      pageSizeOptions: ['1', '10', '20', '50'],
       showQuickJumper: true,
       showSizeChanger: true,
-      showTotal: (total) => (`总共 ${total} 条`)
+      showTotal: (total) => (`总共 ${this.state.page.total} 条`),
+      onShowSizeChange: (current, size) => {this.changePageSize(current, size)},
+      onChange: pageNum => { this.changePageNum(pageNum) },
+      current: this.state.page.current,
+      total: this.state.page.total
     }
 
     return (
@@ -291,6 +341,7 @@ class Cert extends Component {
           dataSource={ this.state.tableData } 
           pagination={ pagination } 
           bordered 
+          loading={ this.state.loading }
           rowKey={ record => record.number }
         />
 
