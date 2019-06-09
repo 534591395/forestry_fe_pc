@@ -14,12 +14,19 @@ class CompanyInventory extends Component {
     info: {},
     plants: [],
     woods: [],
-    companyList: []
+    companyList: [],
+    loading: false,
+    filter: {},
+    page: {
+      current: 1,
+      size: 10,
+      total: 0
+    },
   }
 
   async componentDidMount() {
     await this.getBasicInfo();
-    this.getCompanyInfo(this.state.companyType[0], '', '', '');
+    this.getCompanyInfo(this.state.companyType[0], '', '', '', true);
   }
 
   getBasicInfo = () => {
@@ -47,15 +54,29 @@ class CompanyInventory extends Component {
     });
   }
 
-  getCompanyInfo = (companyType, name, status, store) => {
+  getCompanyInfo = (companyType, name, status, store, isSearch) => {
+    this.setState({
+      loading: true
+    });
+    if (isSearch) {
+      let page = this.state.page;
+      page.current = 1;
+      page.total = 0;
+      this.setState({
+        filter: {companyType, name, status, store} || {},
+        page: page
+      });
+    }
     window.$http({
       url: '/admin/company/getCompanyInventoryList',
       method: 'GET',
       params: {
-        companyType: companyType === '全部' ? '' : companyType, 
-        name, 
-        status, 
-        store
+        companyType: isSearch ? (companyType === '全部' ? '' : companyType) : ((this.state.filter.companyType === '全部' ? '' : this.state.filter.companyType)), 
+        name : isSearch ? name : this.state.filter.name, 
+        status : isSearch ? status : this.state.filter.status,
+        store:  isSearch ? status : this.state.filter.status,
+        pageNum: this.state.page.current,
+        pageSize: this.state.page.size
       }
     }).then((res) => {
       if(res && res.data.code == 0) {
@@ -63,6 +84,16 @@ class CompanyInventory extends Component {
         this.setState({plants: res.data.data.plants});
         this.setState({woods: res.data.data.woods});
         this.setState({companyList: res.data.data.companyList});
+        let page = this.state.page;
+        page.total = res.data.data.total || 0;
+        this.setState({ page: page});
+        this.setState({
+          loading: false
+        });
+      } else {
+        this.setState({
+          loading: false
+        });
       }
     });
   }
@@ -74,7 +105,7 @@ class CompanyInventory extends Component {
 
   search = () => {
     let value = this.props.form.getFieldsValue();
-    this.getCompanyInfo(value.companyType, value.name ? value.name : '', value.status, value.store ? value.store : '');
+    this.getCompanyInfo(value.companyType, value.name ? value.name : '', value.status, value.store ? value.store : '', true);
   }
 
   editor = (record, type) => {
@@ -99,7 +130,21 @@ class CompanyInventory extends Component {
     this.setState({woodDetail: val})
     
   }
+  // 分页
+  changePageNum = (pageNum) => {
+    let data = Object.assign({}, this.state.page, {current: pageNum})
+    this.setState({page: data}, () => {
+      this.getCompanyInfo();
+    });
+    
+  }
 
+  changePageSize = (current, size) => {
+    let data = Object.assign({}, this.state.page, {current: 1, size})
+    this.setState({page: data}, () => {
+      this.getCompanyInfo();
+    });
+  }
   render() {
     const status = ['', '待审核', '已注册', '未通过', '已注销'];
 
@@ -138,10 +183,14 @@ class CompanyInventory extends Component {
     ];
 
     const pagination = {
-      pageSizeOptions: ['10', '20', '50'],
+      pageSizeOptions: ['1', '10', '20', '50'],
       showQuickJumper: true,
       showSizeChanger: true,
-      showTotal: (total) => (`总共 ${total} 条`)
+      showTotal: (total) => (`总共 ${this.state.page.total} 条`),
+      onShowSizeChange: (current, size) => {this.changePageSize(current, size)},
+      onChange: pageNum => { this.changePageNum(pageNum) },
+      current: this.state.page.current,
+      total: this.state.page.total
     }
 
     return (
