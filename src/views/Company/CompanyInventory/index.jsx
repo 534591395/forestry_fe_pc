@@ -257,7 +257,12 @@ class CompanyInventory extends Component {
           </Form>
         </div>
 
-        <Table columns={ columns } dataSource={ this.state.tableData } pagination={ pagination } bordered rowKey={ record => record.id } />
+        <Table 
+          columns={ columns }
+          dataSource={ this.state.tableData }
+          loading={ this.state.loading }
+          pagination={ pagination } 
+          bordered rowKey={ record => record.id } />
         <Modal
           title="查看"
           visible={this.state.showDetail}
