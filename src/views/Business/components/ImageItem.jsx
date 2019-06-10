@@ -42,7 +42,10 @@ class ImageItem extends Component {
     let index = this.state.index
     index --
     this.setState({
-      index: index
+      index: index,
+      current: 90,
+      transStyle:'rotate('+0+'deg)', 
+      width: '100%'
     })
   }
 
@@ -50,7 +53,10 @@ class ImageItem extends Component {
     let index = this.state.index
     index ++
     this.setState({
-      index: index
+      index: index,
+      current: 90,
+      transStyle:'rotate('+0+'deg)', 
+      width: '100%'
     })
   }
   constructor(props) {
@@ -74,7 +80,6 @@ class ImageItem extends Component {
   imgTool = (onLoad) => {
     let {clientWidth, clientHeight} = this.refDom;
     let bodyClientHeight = document.body.clientHeight;
-
  
     if (onLoad) {
       let height = clientHeight > bodyClientHeight ? bodyClientHeight - 160 : clientHeight;
@@ -157,7 +162,7 @@ class ImageItem extends Component {
           visible={ this.state.imageDetailModal } 
           footer={ null }
           centered
-          onCancel={ () => { this.setState({imageDetailModal: false, current: 90, transStyle:'rotate('+0+'deg)'}) } }
+          onCancel={ () => { this.setState({imageDetailModal: false, current: 90, transStyle:'rotate('+0+'deg)', width: '100%'}) } }
         >
           <div className="image-detail-box">
             <img ref={this.saveRef} src={ this.props.images[this.state.index] } alt="" className="img_modal"  style={{ transform:this.state.transStyle, height: this.state.height, width: this.state.width }} onLoad={e => this.imgTool(true)} />
