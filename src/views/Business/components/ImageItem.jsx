@@ -19,10 +19,12 @@ class ImageItem extends Component {
     index: 0,
     current: 90,
     transStyle: '',
-    height: ''
+    height: '',
+    width: ''
   }
 
   setImageModalData = (imageSrc, index) => {
+    // this.imgTool()
     this.setState({imageDetailModal: true});
     this.setState({imageSrc});
     this.setState({index});
@@ -56,22 +58,34 @@ class ImageItem extends Component {
 
     this.saveRef = ref => {this.refDom = ref};
     this.translate = this.translate.bind(this);
+    this.imgTool = this.imgTool.bind(this);
   }
   //  点击选择  设置当前current旋转角度为上一次+90°
-  translate = (e) => {
-    const {clientWidth, clientHeight} = this.refDom;
-    console.log(clientWidth, clientHeight, this.refDom);
+  translate = () => {
+    // const {clientWidth, clientHeight} = this.refDom;
+    // console.log(clientWidth, clientHeight, this.refDom);
     this.setState({
         current:(this.state.current+90)%360,
         transStyle:'rotate('+this.state.current+'deg)'
     });
+    this.imgTool()
+    
+  }
+  imgTool = () => {
+    const {clientWidth, clientHeight} = this.refDom;
+    let bodyClientHeight = document.body.clientHeight
+    // 正
     if (this.state.current/90%2 == 0) {
+      let height = clientHeight > bodyClientHeight ? bodyClientHeight - 160 : clientHeight
       this.setState({
-        height: '100%'
+        height: height + 'px',
+        width: '100%'
       });
-    } else {
+    } else { // 旋转
+      let width = clientHeight > bodyClientHeight ? bodyClientHeight : clientHeight
       this.setState({
-        height: clientWidth + 'px'
+        width: width + 'px',
+        height: '100%'
       });
     }
   }
@@ -114,10 +128,11 @@ class ImageItem extends Component {
           title={ this.props.type == 'plantCert' ? this.props.version == 1 ?  '查看图片' : `查看图片 ${this.props.carNumberList[this.state.index]} ${this.props.timeList[this.state.index]} ${this.props.locationList[this.state.index]}` : '查看图片'}
           visible={ this.state.imageDetailModal } 
           footer={ null }
+          centered
           onCancel={ () => { this.setState({imageDetailModal: false, current: 90, transStyle:'rotate('+0+'deg)'}) } }
         >
-          <div className="image-detail-box">
-            <img ref={this.saveRef} src={ this.props.images[this.state.index] } alt="" className="img_modal" style={{ transform:this.state.transStyle, height: this.state.height}} />
+          <div className="image-detail-box" style={{ transform:this.state.transStyle, height: this.state.height, width: this.state.width }}>
+            <img ref={this.saveRef} src={ this.props.images[this.state.index] } alt="" className="img_modal"  />
             {
               this.props.images.length > 1 ? 
               <div className="arrow-box">

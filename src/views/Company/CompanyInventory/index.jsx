@@ -142,7 +142,7 @@ class CompanyInventory extends Component {
   changePageSize = (current, size) => {
     let data = Object.assign({}, this.state.page, {current: 1, size})
     this.setState({page: data}, () => {
-      this.getCompanyInfo();
+      // this.getCompanyInfo();
     });
   }
   render() {
@@ -183,7 +183,7 @@ class CompanyInventory extends Component {
     ];
 
     const pagination = {
-      pageSizeOptions: ['1', '10', '20', '50'],
+      pageSizeOptions: ['10', '20', '50'],
       showQuickJumper: true,
       showSizeChanger: true,
       showTotal: (total) => (`总共 ${total} 条`),

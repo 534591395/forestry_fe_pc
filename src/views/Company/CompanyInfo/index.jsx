@@ -98,7 +98,7 @@ class CompanyInfo extends Component {
   changePageNum = (pageNum) => {
     let data = Object.assign({}, this.state.page, {current: pageNum})
     this.setState({page: data}, () => {
-      this.getCompanyInfo();
+      // this.getCompanyInfo();
     });
     
   }
@@ -106,7 +106,7 @@ class CompanyInfo extends Component {
   changePageSize = (current, size) => {
     let data = Object.assign({}, this.state.page, {current: 1, size})
     this.setState({page: data}, () => {
-      this.getCompanyInfo();
+      // this.getCompanyInfo();
     });
   }
   render() {
@@ -162,10 +162,11 @@ class CompanyInfo extends Component {
     ];
 
     const pagination = {
-      pageSizeOptions: ['1', '10', '20', '50'],
+      pageSizeOptions: ['10', '20', '50'],
       showQuickJumper: true,
       showSizeChanger: true,
-      showTotal: (total) => (`总共 ${this.state.page.total} 条`),
+      // showTotal: (total) => (`总共 ${this.state.page.total} 条`),
+      showTotal: (total) => (`总共 ${total} 条`),
       onShowSizeChange: (current, size) => {this.changePageSize(current, size)},
       onChange: pageNum => { this.changePageNum(pageNum) },
       current: this.state.page.current,
