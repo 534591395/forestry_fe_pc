@@ -71,11 +71,11 @@ class ImageItem extends Component {
     this.imgTool()
     
   }
-  imgTool = () => {
+  imgTool = (onLoad) => {
     const {clientWidth, clientHeight} = this.refDom;
     let bodyClientHeight = document.body.clientHeight
     // 正
-    if (this.state.current/90%2 == 0) {
+    if (this.state.current/90%2 == 0 || onLoad) {
       let height = clientHeight > bodyClientHeight ? bodyClientHeight - 160 : clientHeight
       this.setState({
         height: height + 'px',
@@ -131,8 +131,8 @@ class ImageItem extends Component {
           centered
           onCancel={ () => { this.setState({imageDetailModal: false, current: 90, transStyle:'rotate('+0+'deg)'}) } }
         >
-          <div className="image-detail-box" style={{ transform:this.state.transStyle, height: this.state.height, width: this.state.width }}>
-            <img ref={this.saveRef} src={ this.props.images[this.state.index] } alt="" className="img_modal"  onLoad={e => this.imgTool()} />
+          <div className="image-detail-box">
+            <img ref={this.saveRef} src={ this.props.images[this.state.index] } alt="" className="img_modal"  style={{ transform:this.state.transStyle, height: this.state.height, width: this.state.width }} onLoad={e => this.imgTool(true)} />
             {
               this.props.images.length > 1 ? 
               <div className="arrow-box">
