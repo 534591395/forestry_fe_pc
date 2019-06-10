@@ -72,21 +72,49 @@ class ImageItem extends Component {
     
   }
   imgTool = (onLoad) => {
-    const {clientWidth, clientHeight} = this.refDom;
-    let bodyClientHeight = document.body.clientHeight
-    // 正
-    if (this.state.current/90%2 == 0 || onLoad) {
-      let height = clientHeight > bodyClientHeight ? bodyClientHeight - 160 : clientHeight
+    let {clientWidth, clientHeight} = this.refDom;
+    let bodyClientHeight = document.body.clientHeight;
+
+ 
+    if (onLoad) {
+      let height = clientHeight > bodyClientHeight ? bodyClientHeight - 160 : clientHeight;
       this.setState({
         height: height + 'px',
         width: '100%'
       });
-    } else { // 旋转
-      let width = clientHeight > bodyClientHeight ? bodyClientHeight : clientHeight
-      this.setState({
-        width: width + 'px',
-        height: '100%'
-      });
+    } else {
+      if ([90, 270].indexOf(this.state.current) > -1) {
+        this.setState({
+          width: clientHeight + 'px'
+        });
+      } else {
+        this.setState({
+          width: '100%'
+        });
+      }
+      // 正
+      // if (this.state.current/90%2 == 0) {
+      //   let height = clientHeight > bodyClientHeight ? bodyClientHeight - 160 : clientHeight
+      //   this.setState({
+      //     height: height + 'px',
+      //     width: '100%'
+      //   });
+      // } else { // 旋转
+      //   let width = clientHeight > bodyClientHeight ? bodyClientHeight : clientHeight
+      //   this.setState({
+      //     width: width + 'px',
+      //     height: '100%'
+      //   });
+      //}
+      // if (this.state.current/90%2 == 0) {
+      //   this.setState({
+      //     height: '100%'
+      //   });
+      // } else {
+      //   this.setState({
+      //     height: clientWidth + 'px'
+      //   });
+      // }
     }
   }
   render() {
