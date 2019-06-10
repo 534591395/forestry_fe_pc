@@ -48,7 +48,7 @@ class ImageItem extends Component {
       width: '100%'
     })
   }
-
+  // 下一张
   next = () => {
     let index = this.state.index
     index ++
