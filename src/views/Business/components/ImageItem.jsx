@@ -132,7 +132,7 @@ class ImageItem extends Component {
           onCancel={ () => { this.setState({imageDetailModal: false, current: 90, transStyle:'rotate('+0+'deg)'}) } }
         >
           <div className="image-detail-box" style={{ transform:this.state.transStyle, height: this.state.height, width: this.state.width }}>
-            <img ref={this.saveRef} src={ this.props.images[this.state.index] } alt="" className="img_modal"  />
+            <img ref={this.saveRef} src={ this.props.images[this.state.index] } alt="" className="img_modal"  onLoad={e => this.imgTool()} />
             {
               this.props.images.length > 1 ? 
               <div className="arrow-box">
