@@ -45,7 +45,7 @@ class ImageItem extends Component {
       index: index,
       current: 90,
       transStyle:'rotate('+0+'deg)', 
-      width: '100%'
+      width: 'auto%'
     })
   }
   // 下一张
@@ -56,7 +56,7 @@ class ImageItem extends Component {
       index: index,
       current: 90,
       transStyle:'rotate('+0+'deg)', 
-      width: '100%'
+      width: 'auto%'
     })
   }
   constructor(props) {
@@ -85,7 +85,7 @@ class ImageItem extends Component {
       let height = clientHeight > bodyClientHeight ? bodyClientHeight - 160 : clientHeight;
       this.setState({
         height: height + 'px',
-        width: '100%'
+        width: 'auto'
       });
     } else {
       if ([90, 270].indexOf(this.state.current) > -1) {
@@ -94,7 +94,7 @@ class ImageItem extends Component {
         });
       } else {
         this.setState({
-          width: '100%'
+          width: 'auto'
         });
       }
       // 正
@@ -162,7 +162,7 @@ class ImageItem extends Component {
           visible={ this.state.imageDetailModal } 
           footer={ null }
           centered
-          onCancel={ () => { this.setState({imageDetailModal: false, current: 90, transStyle:'rotate('+0+'deg)', width: '100%'}) } }
+          onCancel={ () => { this.setState({imageDetailModal: false, current: 90, transStyle:'rotate('+0+'deg)', width: 'auto'}) } }
         >
           <div className="image-detail-box">
             <img ref={this.saveRef} src={ this.props.images[this.state.index] } alt="" className="img_modal"  style={{ transform:this.state.transStyle, height: this.state.height, width: this.state.width }} onLoad={e => this.imgTool(true)} />
