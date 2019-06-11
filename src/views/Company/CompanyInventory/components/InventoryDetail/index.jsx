@@ -103,7 +103,7 @@ class InventoryDetail extends Component {
         first_variety: this.state.type,
         cid: typeof this.props.info.id !== 'undefined' ? this.props.info.id :  this.state.nowChoiceCompany.id,
         plant_variety: values.plant_variety,
-        amount: values.amount,
+        amount: values.amount
       }
     }
     window.$http({
@@ -215,16 +215,21 @@ class InventoryDetail extends Component {
 
   render() {
     const { getFieldDecorator } = this.props.form;
-    const columns = [
+    let columns = [
       { title: '木材品种', dataIndex: 'first_variety', key: 'first_variety' },
       { title: '开证量(m³)', dataIndex: '', key: 'age', render: (text, record) => (
         <Input size="small" value={ record.amount } type="number" onChange ={value => this._changeValue(value, record)} />
         ) },
       { title: '更新时间', dataIndex: 'last_modify_time', key: 'last_modify_time' },
       {
-        title: '操作', dataIndex: '', key: '', render: (text, record) => <a href="javascript:;" onClick={ () => { this.addReq('更新', record)}}>更新</a>,
-      },
+        title: '操作', dataIndex: '', key: '操作', render: (text, record) => <a href="javascript:;" onClick={ () => { this.addReq('更新', record)}}>更新</a>,
+      }
     ];
+
+    if (this.state.type == 'first_variety_02') {
+      columns.splice(2, 0, { title: '类型', dataIndex: 'wood_variety_zh', key: 'wood_variety_zh' },);
+    }
+
     const pagination = {
       pageSizeOptions: ['10', '20', '50'],
       showQuickJumper: true,
@@ -232,12 +237,20 @@ class InventoryDetail extends Component {
       showTotal: (total) => (`总共 ${total} 条`)
     }
 
-    let dataArr;
+    let dataArr = [];
     if (typeof this.props.info.id !== 'undefined') {
       dataArr = this.props.woodDetail[this.state.type];
     } else {
       dataArr = this.state.nowChoiceCompany.woodDetail[this.state.type];
     }
+    
+    dataArr.map(item => {
+      (this.props.woods || []).map( wood => {
+        if (item.wood_variety == wood.key) {
+          item.wood_variety_zh = wood.value;
+        }
+      });
+    });
     
     return (
       <div className="inventory-detail">
