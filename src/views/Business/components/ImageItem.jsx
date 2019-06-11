@@ -156,7 +156,8 @@ class ImageItem extends Component {
         }
         {/* </div> */}
  
-        <Modal 
+        <Modal
+          wrapClassName="imgBigBox" 
           width={'auto'} 
           title={ this.props.type == 'plantCert' ? this.props.version == 1 ?  '查看图片' : `查看图片 ${this.props.carNumberList[this.state.index]} ${this.props.timeList[this.state.index]} ${this.props.locationList[this.state.index]}` : '查看图片'}
           visible={ this.state.imageDetailModal } 
