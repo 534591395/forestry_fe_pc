@@ -85,7 +85,7 @@ class ImageItem extends Component {
       let height = clientHeight > bodyClientHeight ? bodyClientHeight - 160 : clientHeight;
       this.setState({
         height: height + 'px',
-        width: 'auto'
+        width: 'auto' // 图片auto
       });
     } else {
       if ([90, 270].indexOf(this.state.current) > -1) {
