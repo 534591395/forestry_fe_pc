@@ -174,13 +174,13 @@ class ImageItem extends Component {
                 {
                   this.state.index == 0 ? 
                   <Icon type="left-circle" style={{ fontSize: '40px', color: '#ccc', cursor: 'not-allowed' }} />
-                  : <Icon onClick={ this.prev } type="left-circle" style={{ fontSize: '40px', color: '#fff', cursor: 'pointer' }} />
+                  : <Icon onClick={ this.prev } type="left-circle" style={{ fontSize: '40px', color: '#ccc', cursor: 'pointer' }} />
                 }
                 {/* 判断是否为最后一张 */}
                 {
                   this.state.index == this.props.images.length - 1 ? 
                   <Icon type="right-circle" style={{ fontSize: '40px', color: '#ccc', cursor: 'not-allowed' }} />
-                  : <Icon onClick={ this.next } type="right-circle" style={{ fontSize: '40px', color: '#fff', cursor: 'pointer' }} />
+                  : <Icon onClick={ this.next } type="right-circle" style={{ fontSize: '40px', color: '#ccc', cursor: 'pointer' }} />
                 }
               </div>
               : null
