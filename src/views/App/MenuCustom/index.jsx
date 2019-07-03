@@ -18,6 +18,22 @@ class MenuCustom extends Component {
     }
   }
 
+  isAdmin() {
+    let bool = false;
+    try {
+      let user =  window.$session.get('user');
+      let role = user.role;
+      role.map( item => {
+        if([1,2].indexOf(item.id) > -1) {
+          bool = true;
+        }
+      });
+    } catch (error) {
+      bool = false;
+    }
+    return bool;
+  }
+
   render() {
     return (
       <div className="menuCustom">
@@ -72,7 +88,18 @@ class MenuCustom extends Component {
               return null;
             })
           }
-          
+          {
+            this.isAdmin() ? 
+            <Menu.Item >{
+              <a href="http://47.105.67.161:8088/#/dashboard" target="_blank">
+                <span>
+                  <Icon type={ "area-chart" } />
+                  <span>{ "报表查询" }</span>
+                </span>
+              </a>
+            }</Menu.Item> : ''
+          }
+
         </Menu>
       </div>
     )
