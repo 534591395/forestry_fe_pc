@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
-import { Table, message  } from 'antd';
+import { Table, message, Modal  } from 'antd';
+
+import ImageItem from '../../Business/components/ImageItem';
 
 import './index.less';
 
@@ -80,6 +82,16 @@ class Quarantine extends Component {
     });
   }
 
+  showImg = (record) => {
+    this.setState({
+      imageList: [{
+        title: '',
+        images: record.attachment
+      }],
+      imageModal: true
+    });
+  }
+
   render() {
     const columns = [
       {
@@ -112,7 +124,18 @@ class Quarantine extends Component {
       },
       {
         title: '图片',
-        dataIndex: '8'
+        render: (text, record) => (
+          <span>
+            <a 
+              key={ record.id}
+              onClick={ 
+                () => { this.showImg(record) } 
+              }
+            >
+              查看
+            </a>
+          </span>
+        )
       }
     ];
 
@@ -137,6 +160,23 @@ class Quarantine extends Component {
           loading={ this.state.loading }
           rowKey={ record => record.id }
         />
+
+        <Modal 
+          title="查看" 
+          visible={ this.state.imageModal } 
+          maskClosable={ false }
+          destroyOnClose={true}
+          onCancel={ () => { this.setState({imageModal: false}) } }
+          footer={[]}
+        >
+          {
+            this.state.imageList.map((item, index) => {
+              return <ImageItem title={ '' } images={ item.images } key={ index }/>
+            })
+          }
+        </Modal>
+
+
       </div>
     )
   }
