@@ -84,35 +84,35 @@ class Check extends Component {
     const columns = [
       {
         title: '企业名称',
-        dataIndex: '1'
+        dataIndex: 'name'
       },
       {
         title: '检查日期',
-        dataIndex: '2'
+        dataIndex: 'check_date'
       },
       {
         title: '检查人数',
-        dataIndex: '3'
+        dataIndex: 'check_number'
       },
       {
         title: '仓储地点',
-        dataIndex: '4'
+        dataIndex: 'store_area'
       },
       {
         title: '台锯数',
-        dataIndex: '5'
+        dataIndex: 'bench_count'
       },
       {
         title: '检查地点',
-        dataIndex: '6'
+        dataIndex: 'check_area'
       },
       {
         title: '车辆数量',
-        dataIndex: '7'
+        dataIndex: 'car_count'
       },
       {
         title: '车牌',
-        dataIndex: '8'
+        dataIndex: 'car_card'
       },
       {
         title: '图片',
@@ -120,7 +120,7 @@ class Check extends Component {
       },
       {
         title: '备注',
-        dataIndex: '10'
+        dataIndex: 'remark'
       }
     ];
 

@@ -84,31 +84,31 @@ class Quarantine extends Component {
     const columns = [
       {
         title: '企业名称',
-        dataIndex: '1'
+        dataIndex: 'name'
       },
       {
         title: '检查日期',
-        dataIndex: '2'
+        dataIndex: 'check_date'
       },
       {
         title: '木材品种',
-        dataIndex: '3'
+        dataIndex: 'plant_variety'
       },
       {
         title: '来源',
-        dataIndex: '4'
+        dataIndex: 'source'
       },
       {
         title: '进口报检号',
-        dataIndex: '5'
+        dataIndex: 'import_number'
       },
       {
         title: '抽检数量',
-        dataIndex: '6'
+        dataIndex: 'check_amount'
       },
       {
         title: '现场检疫',
-        dataIndex: '7'
+        dataIndex: 'check_desc'
       },
       {
         title: '图片',
