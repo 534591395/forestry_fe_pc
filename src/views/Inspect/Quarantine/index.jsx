@@ -115,8 +115,28 @@ class Quarantine extends Component {
         dataIndex: 'import_number'
       },
       {
+        title: '来源国家',
+        dataIndex: 'source_nation'
+      },
+      {
+        title: '检疫人数',
+        dataIndex: 'quarantine_person_count'
+      },
+      {
+        title: '检疫地点',
+        dataIndex: 'quarantine_address'
+      },
+      {
         title: '抽检数量',
         dataIndex: 'check_amount'
+      },
+      {
+        title: '检查地点',
+        dataIndex: 'check_area'
+      },
+      {
+        title: '检查人数',
+        dataIndex: 'check_number'
       },
       {
         title: '现场检疫',
