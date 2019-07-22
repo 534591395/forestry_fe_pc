@@ -119,11 +119,11 @@ class Check extends Component {
         dataIndex: 'check_area'
       },
       {
-        title: '车辆数量',
+        title: '开证车辆',
         dataIndex: 'car_count'
       },
       {
-        title: '车牌',
+        title: '车牌核对',
         dataIndex: 'car_card'
       },
       {
@@ -131,9 +131,17 @@ class Check extends Component {
         dataIndex: 'delivery_order_valid'
       },
       {
-        title: '备注',
-        dataIndex: 'remark'
+        title: 'GPS',
+        dataIndex: 'location'
       },
+      {
+        title: '提交时间',
+        dataIndex: 'create_time'
+      },
+      // {
+      //   title: '备注',
+      //   dataIndex: 'remark'
+      // },
       {
         title: '图片',
         render: (text, record) => (

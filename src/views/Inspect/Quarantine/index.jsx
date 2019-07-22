@@ -107,7 +107,7 @@ class Quarantine extends Component {
         dataIndex: 'plant_variety'
       },
       {
-        title: '来源',
+        title: '来源港口',
         dataIndex: 'source'
       },
       {
@@ -131,12 +131,12 @@ class Quarantine extends Component {
         dataIndex: 'check_amount'
       },
       {
-        title: '检查地点',
-        dataIndex: 'check_area'
+        title: 'GPS',
+        dataIndex: 'location'
       },
       {
-        title: '检查人数',
-        dataIndex: 'check_number'
+        title: '提交时间',
+        dataIndex: 'create_time'
       },
       {
         title: '现场检疫',
