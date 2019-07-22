@@ -110,10 +110,10 @@ class Quarantine extends Component {
         title: '来源港口',
         dataIndex: 'source'
       },
-      {
-        title: '进口报检号',
-        dataIndex: 'import_number'
-      },
+      // {
+      //   title: '进口报检号',
+      //   dataIndex: 'import_number'
+      // },
       {
         title: '来源国家',
         dataIndex: 'source_nation'
