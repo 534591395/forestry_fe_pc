@@ -107,11 +107,11 @@ class Check extends Component {
         dataIndex: 'check_number'
       },
       {
-        title: '仓储地点',
+        title: '现有仓储地点',
         dataIndex: 'store_area'
       },
       {
-        title: '台锯数',
+        title: '台锯数（加工厂）',
         dataIndex: 'bench_count'
       },
       {
@@ -119,16 +119,20 @@ class Check extends Component {
         dataIndex: 'check_area'
       },
       {
-        title: '开证车辆',
+        title: '近期开证车辆',
         dataIndex: 'car_count'
       },
       {
-        title: '车牌核对',
+        title: '车牌核对情况',
         dataIndex: 'car_card'
       },
       {
-        title: '是否合规',
+        title: '出货单填写是否合规',
         dataIndex: 'delivery_order_valid'
+      },
+      {
+        title: '检查结论',
+        dataIndex: 'remark'
       },
       {
         title: 'GPS',
