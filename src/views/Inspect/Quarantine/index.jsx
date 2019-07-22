@@ -139,6 +139,10 @@ class Quarantine extends Component {
         dataIndex: 'create_time'
       },
       {
+        title: '是否实验室检疫描述',
+        dataIndex: 'remark'
+      },
+      {
         title: '现场检疫',
         dataIndex: 'check_desc'
       },
