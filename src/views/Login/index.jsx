@@ -6,8 +6,28 @@ import './index.less';
 class Login extends Component {
   componentDidMount() {
     if(window.$session.get('user')) {
-      this.props.history.push('/');
+      if (this.isAdmin()) {
+        this.props.history.push('/');
+      } else {
+        this.props.history.push('/app/business/plantCert');
+      }
     }
+  }
+
+  isAdmin() {
+    let bool = false;
+    try {
+      let user =  window.$session.get('user');
+      let role = user.role;
+      role.map( item => {
+        if([1,2].indexOf(item.id) > -1) {
+          bool = true;
+        }
+      });
+    } catch (error) {
+      bool = false;
+    }
+    return bool;
   }
 
   submit = () => {
@@ -15,7 +35,13 @@ class Login extends Component {
       if(!err) {
         await window.$service.login(values);
         await window.$service.getMenu();
-        this.props.history.push('/');
+        if(window.$session.get('user')) {
+          if (this.isAdmin()) {
+            this.props.history.push('/');
+          } else {
+            this.props.history.push('/app/business/plantCert');
+          }
+        }
       }
     });
   }

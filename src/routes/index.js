@@ -1,7 +1,7 @@
 export default {
   home: { 
     key: '/app/home/index', 
-    title: '概览', 
+    title: '报表查询', 
     icon: 'area-chart', 
     component: 'Home'
   },

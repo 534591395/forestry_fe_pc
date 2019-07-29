@@ -7,6 +7,7 @@ import routes from '../../../routes';
 const SubMenu = Menu.SubMenu;
 
 class MenuCustom extends Component {
+
   setDefaultActiveMenuItem = () => {
     switch (this.props.location.pathname) {
       case '/app/company/companyDetail': {
@@ -35,17 +36,21 @@ class MenuCustom extends Component {
   }
 
   render() {
+    let routesArr = JSON.parse(JSON.stringify(routes));
+    if (!this.isAdmin()) {
+      delete routesArr.home;
+    }
     return (
       <div className="menuCustom">
         <Menu mode="inline" theme="dark" selectedKeys={ this.setDefaultActiveMenuItem() } defaultOpenKeys={
-          Object.keys(routes).map((item) => {
-            return routes[item].key
+          Object.keys(routesArr).map((item) => {
+            return routesArr[item].key
           })
         }>
           {
-            Object.keys(routes).map((item) => {
+            Object.keys(routesArr).map((item) => {
               if(window.$session.get('menu').indexOf(item) != -1) {
-                if(routes[item].subs) {
+                if(routesArr[item].subs) {
                   return (
                     <SubMenu title={
                       <span>
@@ -74,11 +79,11 @@ class MenuCustom extends Component {
                 }
                 else {
                   return (
-                    <Menu.Item key={ routes[item].key }>{
-                      <Link to={ routes[item].key } replace>
+                    <Menu.Item key={ routesArr[item].key }>{
+                      <Link to={ routesArr[item].key } replace>
                         <span>
-                          <Icon type={ routes[item].icon } />
-                          <span>{ routes[item].title }</span>
+                          <Icon type={ routesArr[item].icon } />
+                          <span>{ routesArr[item].title }</span>
                         </span>
                       </Link>
                     }</Menu.Item>
@@ -88,7 +93,7 @@ class MenuCustom extends Component {
               return null;
             })
           }
-          {
+          {/* {
             this.isAdmin() ? 
             <Menu.Item >{
               <a href="http://47.105.67.161:8088/#/dashboard" target="_blank">
@@ -98,8 +103,7 @@ class MenuCustom extends Component {
                 </span>
               </a>
             }</Menu.Item> : ''
-          }
-
+          } */}
         </Menu>
       </div>
     )
