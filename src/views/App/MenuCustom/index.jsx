@@ -93,7 +93,7 @@ class MenuCustom extends Component {
               return null;
             })
           }
-          {/* {
+          {
             this.isAdmin() ? 
             <Menu.Item >{
               <a href="http://47.105.67.161:8088/#/dashboard" target="_blank">
@@ -103,7 +103,7 @@ class MenuCustom extends Component {
                 </span>
               </a>
             }</Menu.Item> : ''
-          } */}
+          }
         </Menu>
       </div>
     )
