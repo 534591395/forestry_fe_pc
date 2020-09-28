@@ -579,7 +579,7 @@ class PlantCert extends Component {
             </span>
             <span>
               {
-                record.status == 4 && JSON.parse(record.wood_json).woodList.length == 1 && record.version == 2 ? <a href="javascript: void(0);" style={{ marginRight: '5px' }} onClick={ ($event) => { this.cancelCarNumber('作废', record) } }>作废</a> : ''
+                ((record.status == 4 || record.status == 2) && JSON.parse(record.wood_json).woodList.length == 1 && record.version == 2) ? <a href="javascript: void(0);" style={{ marginRight: '5px' }} onClick={ ($event) => { this.cancelCarNumber('作废', record) } }>作废</a> : ''
               }
             </span>
             <span>
