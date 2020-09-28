@@ -17,7 +17,7 @@ class Home extends Component {
   render() {
     return (
       <div className="home">
-        <iframe src="http://47.105.67.161:8088/#/dashboard" style={{border: 0, width: this.state.width, height: this.state.height}} ref="dashboard"></iframe>
+        <iframe src="http://58.211.58.120/report/#/dashboard" style={{border: 0, width: this.state.width, height: this.state.height}} ref="dashboard"></iframe>
       </div>
     )
   }

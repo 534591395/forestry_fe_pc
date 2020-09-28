@@ -96,7 +96,7 @@ class MenuCustom extends Component {
           {
             this.isAdmin() ? 
             <Menu.Item >{
-              <a href="http://47.105.67.161:8088/#/dashboard" target="_blank">
+              <a href="http://58.211.58.120/report/#/dashboard" target="_blank">
                 <span>
                   <Icon type={ "area-chart" } />
                   <span>{ "报表查询" }</span>
